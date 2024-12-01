@@ -1,0 +1,6 @@
+services:
+  day1:
+    build:
+      context: .
+      dockerfile: day1/Dockerfile
+    ports: [ "3001:3000" ]
