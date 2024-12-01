@@ -1,4 +1,4 @@
-# Advent of Code 2024
+# Advent of Code 2024 ![gofmt](https://github.com/terminalnode/adventofcode2024/workflows/gofmt/badge.svg)
 This year's advent of code is being solved in Go as a series of webservices.
 Each webservice exposes `POST /1` and `POST /2` which accepts an `application/text`
 with the puzzle input as data.
