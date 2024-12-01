@@ -15,7 +15,7 @@ day 1 part 2, you would run `curl -X POST --data-binary @input http://localhost:
 
 | Day | Solution | Day | Solution |
 |-----|----------|-----|----------|
-| 01  | ⭐        | 14  |          |
+| 01  | ⭐ ⭐      | 14  |          |
 | 02  |          | 15  |          |
 | 03  |          | 16  |          |
 | 04  |          | 17  |          |
