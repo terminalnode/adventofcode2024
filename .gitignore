@@ -1,0 +1,7 @@
+input/*
+!input/.gitkeep
+
+build/*
+!build/.gitkeep
+
+.idea
