@@ -4,3 +4,16 @@ services:
       context: .
       dockerfile: day01/Dockerfile
     ports: [ "3001:3000" ]
+    develop:
+      watch:
+        - action: rebuild
+          path: ./day01/
+  day2:
+    build:
+      context: .
+      dockerfile: day02/Dockerfile
+    ports: [ "3002:3000" ]
+    develop:
+      watch:
+        - action: rebuild
+          path: ./day02/
