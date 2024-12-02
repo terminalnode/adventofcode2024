@@ -1,0 +1,22 @@
+{{- range .Values.days }}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: aoc2024-day{{ .day }}
+  labels:
+    app: aoc2024
+    day: "{{ .day }}"
+spec:
+  type: ClusterIP
+  selector:
+    app: aoc2024
+    day: "{{ .day }}"
+  ports:
+    - protocol: TCP
+      port: {{ .servicePort | default 3000 }}
+      targetPort: {{ .containerPort | default 3000 }}
+      name: http
+
+---
+{{- end }}
