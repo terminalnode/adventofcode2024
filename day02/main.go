@@ -18,7 +18,10 @@ func main() {
 	common.Setup(2, part1, part2)
 }
 
-func parseAllReports(input string) ([]report, error) {
+func parseAllReports(
+	input string,
+	problemDampener bool,
+) ([]report, error) {
 	lines := strings.Split(input, "\n")
 	reports := make([]report, len(lines))
 
@@ -27,13 +30,26 @@ func parseAllReports(input string) ([]report, error) {
 		if err != nil {
 			return nil, err
 		}
-		reports[i] = report{levels, isReportSafe(levels)}
+
+		isSafe := isReportSafe(levels, -1)
+		if !isSafe && problemDampener {
+			for skipIdx := range levels {
+				isSafe = isReportSafe(levels, skipIdx)
+				if isSafe {
+					break
+				}
+			}
+		}
+
+		reports[i] = report{levels, isSafe}
 	}
 
 	return reports, nil
 }
 
-func parseReportLevels(input string) ([]level, error) {
+func parseReportLevels(
+	input string,
+) ([]level, error) {
 	fields := strings.Fields(input)
 	levels := make([]int, len(fields))
 
@@ -48,18 +64,33 @@ func parseReportLevels(input string) ([]level, error) {
 	return levels, nil
 }
 
-func isReportSafe(levels []level) bool {
-	if len(levels) < 2 {
-		return true
+func isReportSafe(
+	levels []level,
+	skipIndex int,
+) bool {
+	var increasing bool
+	switch skipIndex {
+	case 0:
+		increasing = levels[1] < levels[2]
+	case 1:
+		increasing = levels[0] < levels[2]
+	default:
+		increasing = levels[0] < levels[1]
 	}
 
-	increasing := false
-	if levels[0] < levels[1] {
-		increasing = true
+	var firstIdx int
+	if skipIndex == 0 {
+		firstIdx = 1
+	} else {
+		firstIdx = 0
 	}
+	previous := levels[firstIdx]
 
-	previous := levels[0]
-	for _, current := range levels[1:] {
+	for idx, current := range levels[1:] {
+		if skipIndex == idx+1 || firstIdx == idx+1 {
+			continue
+		}
+
 		var diff int
 		if increasing {
 			diff = current - previous
@@ -72,26 +103,39 @@ func isReportSafe(levels []level) bool {
 		}
 		previous = current
 	}
-
 	return true
 }
 
-func part1(input string) string {
-	reports, err := parseAllReports(input)
-	if err != nil {
-		return fmt.Sprintf("Failed to parse reports: %v", err)
-	}
-
+func countSafe(
+	reports []report,
+) int {
 	count := 0
 	for _, r := range reports {
 		if r.isSafe {
 			count += 1
 		}
 	}
-
-	return fmt.Sprintf("Number of safe reports: %d", count)
+	return count
 }
 
-func part2(input string) string {
-	return fmt.Sprintf("Not implemented yet")
+func part1(
+	input string,
+) string {
+	reports, err := parseAllReports(input, false)
+	if err != nil {
+		return fmt.Sprintf("Failed to parse reports: %v", err)
+	}
+
+	return fmt.Sprintf("Number of safe reports: %d", countSafe(reports))
+}
+
+func part2(
+	input string,
+) string {
+	reports, err := parseAllReports(input, true)
+	if err != nil {
+		return fmt.Sprintf("Failed to parse reports: %v", err)
+	}
+
+	return fmt.Sprintf("Number of safe reports: %d", countSafe(reports))
 }

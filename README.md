@@ -15,13 +15,12 @@ information.
 
 ## Progress
 * ⭐ means solved
-* 🥸 means solved, but not a very satisfying solution
-* 💩 means solved, but...
+* 🥸 means solved, but takes over a minute to run
 
 | Day | Solution | Day | Solution |
 |-----|----------|-----|----------|
 | 01  | ⭐ ⭐      | 14  |          |
-| 02  | ⭐        | 15  |          |
+| 02  | ⭐ ⭐      | 15  |          |
 | 03  |          | 16  |          |
 | 04  |          | 17  |          |
 | 05  |          | 18  |          |
