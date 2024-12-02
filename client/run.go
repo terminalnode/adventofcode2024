@@ -10,8 +10,6 @@ import (
 )
 
 func runCmd(args []string) {
-	fmt.Println("Args", args)
-
 	flagSet := flag.NewFlagSet("run", flag.ExitOnError)
 	day := flagSet.Int("day", 0, "The day to solve")
 	part := flagSet.Int("part", 0, "The part of the provided day to solve")
