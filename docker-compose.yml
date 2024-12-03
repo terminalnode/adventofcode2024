@@ -1,5 +1,5 @@
 services:
-  day1:
+  day01:
     build:
       context: .
       dockerfile: day01/Dockerfile
@@ -8,7 +8,7 @@ services:
       watch:
         - action: rebuild
           path: ./day01/
-  day2:
+  day02:
     build:
       context: .
       dockerfile: day02/Dockerfile
@@ -17,3 +17,12 @@ services:
       watch:
         - action: rebuild
           path: ./day02/
+  day03:
+    build:
+      context: .
+      dockerfile: day03/Dockerfile
+    ports: [ "3003:3000" ]
+    develop:
+      watch:
+        - action: rebuild
+          path: ./day03/
