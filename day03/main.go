@@ -7,35 +7,58 @@ import (
 	"strconv"
 )
 
-var findMulRegex = regexp.MustCompile("mul\\((\\d+),(\\d+)\\)")
+var r = regexp.MustCompile("(mul|do|don't)\\(((\\d+),(\\d+))?\\)")
 
 func main() {
-	common.Setup(2, part1, part2)
+	common.Setup(3, part1, part2)
 }
 
 func part1(
 	input string,
 ) string {
-	finds := findMulRegex.FindAllSubmatch([]byte(input), -1)
+	finds := r.FindAllSubmatch([]byte(input), -1)
 	sum := 0
 	for _, match := range finds {
-		if len(match) != 3 {
-			return fmt.Sprintf("Expected 3 results from regex, got %q\n", match)
+		verb := string(match[1])
+		if verb != "mul" {
+			continue
 		}
 
-		multiplied, err := mul(string(match[1]), string(match[2]))
+		multiplied, err := mul(string(match[3]), string(match[4]))
 		if err != nil {
 			return fmt.Sprintf("Failed to parse multiplication of %q:\n%v\n", match, err)
 		}
 		sum += multiplied
 	}
-	return fmt.Sprintf("Sum of all %d multiplications: %d", len(finds), sum)
+	return fmt.Sprintf("Result: %d", sum)
 }
 
 func part2(
 	input string,
 ) string {
-	return "Not solved yet"
+	finds := r.FindAllSubmatch([]byte(input), -1)
+	sum := 0
+
+	enabled := true
+	for _, match := range finds {
+		verb := string(match[1])
+		switch verb {
+		case "mul":
+			if enabled {
+				multiplied, err := mul(string(match[3]), string(match[4]))
+				if err != nil {
+					return fmt.Sprintf("Failed to parse multiplication of %q:\n%v\n", match, err)
+				}
+				sum += multiplied
+			}
+		case "do":
+			enabled = true
+		case "don't":
+			enabled = false
+		}
+	}
+
+	return fmt.Sprintf("Result: %d", sum)
 }
 
 func mul(sub1 string, sub2 string) (int, error) {
