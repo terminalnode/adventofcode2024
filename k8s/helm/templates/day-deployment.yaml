@@ -1,0 +1,35 @@
+{{- range .Values.days }}
+
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: aoc2024-day{{ .day }}
+  labels:
+    app: aoc2024
+    day: "{{ .day }}"
+    version: {{ .version | default "v1" }}
+
+spec:
+  replicas: {{ .replicas }}
+  selector:
+    matchLabels:
+      app: aoc2024
+      day: "{{ .day }}"
+      version: {{ .version | default "v1" }}
+  template:
+    metadata:
+      labels:
+        app: aoc2024
+        day: "{{ .day }}"
+        version: {{ .version | default "v1" }}
+    spec:
+      containers:
+        - name: aoc2024-day{{ .day }}
+          image: aoc2024-day{{ .day }}
+          imagePullPolicy: Never
+          ports:
+            - containerPort: {{ .containerPort | default 3000 }}
+
+---
+{{- end }}
