@@ -19,6 +19,8 @@ spec:
       version: {{ .version | default "v1" }}
   template:
     metadata:
+      annotations:
+        redeploy-timestamp: "{{ now | unixEpoch }}}"
       labels:
         app: aoc2024
         day: "{{ .day }}"
