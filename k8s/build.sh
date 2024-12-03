@@ -10,7 +10,7 @@ if [ -z "$(command -v minikube)" ]; then
   echo 'Minikube is not installed, check: https://minikube.sigs.k8s.io/docs/'
   echo 'Build will continue to execute, but you will not be able to use the resulting images in the k8s cluster.'
 else
-  echo 'Minikube is installed'
+  echo 'Minikube is installed, initializing the minikube docker environment.'
   eval $(minikube docker-env)
 fi
 
