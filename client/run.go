@@ -72,7 +72,7 @@ func runSolution(
 	defer resp.Body.Close()
 	body, bodyReadErr := io.ReadAll(resp.Body)
 
-	if resp.StatusCode != 200 && bodyReadErr == nil {
+	if resp.StatusCode != 200 && bodyReadErr != nil {
 		return "", fmt.Errorf("unexpected status code %d", resp.StatusCode)
 	} else if resp.StatusCode != 200 {
 		return "", fmt.Errorf("unexpected status code %d: '%s'", resp.StatusCode, body)

@@ -1,7 +1,6 @@
 package common
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -15,25 +14,30 @@ func Setup(
 	part1 Solution,
 	part2 Solution,
 ) {
-	http.HandleFunc("/1", createHandler(day, 1, part1))
-	http.HandleFunc("/2", createHandler(day, 2, part2))
+	http.HandleFunc("/1", createSolutionHandler(day, 1, part1))
+	http.HandleFunc("/2", createSolutionHandler(day, 2, part2))
+	http.HandleFunc("/health", healthCheckHandler)
+	http.HandleFunc("/health/live", healthCheckHandler)
+	http.HandleFunc("/health/ready", healthCheckHandler)
+
 	fmt.Printf("Starting Day #%d service on port 3000\n", day)
 	if err := http.ListenAndServe(":3000", nil); err != nil {
 		log.Fatal(err)
+
 	}
 }
 
-func createHandler(
+func createSolutionHandler(
 	day int,
 	part int,
 	solution func(string) string,
 ) func(http.ResponseWriter, *http.Request) {
 	if solution == nil {
-		solution = defaultHandler(day, part)
+		solution = defaultSolutionHandler(day, part)
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		if err := methodMustBePost(w, r); err != nil {
+		if err := whitelistMethods([]string{"POST"}, w, r); err != nil {
 			fmt.Print(err.Error())
 			return
 		}
@@ -45,15 +49,29 @@ func createHandler(
 		}
 
 		result := solution(input)
-		_, err = w.Write([]byte(result))
-		if err != nil {
+		if _, err = w.Write([]byte(result)); err != nil {
 			http.Error(w, "Error", http.StatusInternalServerError)
 			return
 		}
 	}
 }
 
-func defaultHandler(
+func healthCheckHandler(
+	w http.ResponseWriter,
+	r *http.Request,
+) {
+	if err := whitelistMethods([]string{"GET", "POST"}, w, r); err != nil {
+		fmt.Print(err.Error())
+		return
+	}
+
+	if _, err := w.Write([]byte("{ \"status\": \"UP\" }")); err != nil {
+		http.Error(w, "Error", http.StatusInternalServerError)
+		return
+	}
+}
+
+func defaultSolutionHandler(
 	day int,
 	part int,
 ) Solution {
@@ -62,14 +80,23 @@ func defaultHandler(
 	}
 }
 
-func methodMustBePost(w http.ResponseWriter, r *http.Request) error {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
-		msg := fmt.Sprintf("Expected method to be POST, but was %s\n", r.Method)
-		return errors.New(msg)
+func whitelistMethods(
+	methods []string,
+	w http.ResponseWriter,
+	r *http.Request,
+) error {
+	for _, method := range methods {
+		if r.Method == method {
+			return nil
+		}
 	}
 
-	return nil
+	http.Error(
+		w,
+		fmt.Sprintf("%s is not in allowed methods: %q", r.Method, methods),
+		http.StatusMethodNotAllowed,
+	)
+	return fmt.Errorf("expected method to be one of %q, but was %s", methods, r.Method)
 }
 
 func readInput(r *http.Request) (string, error) {
