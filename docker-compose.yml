@@ -2,27 +2,274 @@ services:
   day01:
     build:
       context: .
-      dockerfile: day01/Dockerfile
+      dockerfile: Dockerfile
+      args: { DAY: '01' }
     ports: [ "3001:3000" ]
     develop:
       watch:
-        - action: rebuild
-          path: ./day01/
+        - { action: rebuild, path: solutions/day01/ }
+        - { action: rebuild, path: common/ }
+
   day02:
     build:
       context: .
-      dockerfile: day02/Dockerfile
+      dockerfile: Dockerfile
+      args: { DAY: '02' }
     ports: [ "3002:3000" ]
     develop:
       watch:
-        - action: rebuild
-          path: ./day02/
+        - { action: rebuild, path: solutions/day01/ }
+        - { action: rebuild, path: common/ }
+
   day03:
     build:
       context: .
-      dockerfile: day03/Dockerfile
+      dockerfile: Dockerfile
+      args: { DAY: '03' }
     ports: [ "3003:3000" ]
     develop:
       watch:
-        - action: rebuild
-          path: ./day03/
+        - { action: rebuild, path: solutions/day03/ }
+        - { action: rebuild, path: common/ }
+
+  day04:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: { DAY: '04' }
+    ports: [ "3004:3000" ]
+    develop:
+      watch:
+        - { action: rebuild, path: solutions/day04/ }
+        - { action: rebuild, path: common/ }
+
+  day05:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: { DAY: '05' }
+    ports: [ "3005:3000" ]
+    develop:
+      watch:
+        - { action: rebuild, path: solutions/day05/ }
+        - { action: rebuild, path: common/ }
+
+  day06:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: { DAY: '06' }
+    ports: [ "3006:3000" ]
+    develop:
+      watch:
+        - { action: rebuild, path: solutions/day06/ }
+        - { action: rebuild, path: common/ }
+
+  day07:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: { DAY: '07' }
+    ports: [ "3007:3000" ]
+    develop:
+      watch:
+        - { action: rebuild, path: solutions/day07/ }
+        - { action: rebuild, path: common/ }
+
+  day08:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: { DAY: '08' }
+    ports: [ "3008:3000" ]
+    develop:
+      watch:
+        - { action: rebuild, path: solutions/day08/ }
+        - { action: rebuild, path: common/ }
+
+  day09:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: { DAY: '09' }
+    ports: [ "3009:3000" ]
+    develop:
+      watch:
+        - { action: rebuild, path: solutions/day09/ }
+        - { action: rebuild, path: common/ }
+
+  day10:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: { DAY: '10' }
+    ports: [ "3010:3000" ]
+    develop:
+      watch:
+        - { action: rebuild, path: solutions/day10/ }
+        - { action: rebuild, path: common/ }
+
+  day11:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: { DAY: '11' }
+    ports: [ "3011:3000" ]
+    develop:
+      watch:
+        - { action: rebuild, path: solutions/day11/ }
+        - { action: rebuild, path: common/ }
+
+  day12:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: { DAY: '12' }
+    ports: [ "3012:3000" ]
+    develop:
+      watch:
+        - { action: rebuild, path: solutions/day12/ }
+        - { action: rebuild, path: common/ }
+
+  day13:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: { DAY: '13' }
+    ports: [ "3013:3000" ]
+    develop:
+      watch:
+        - { action: rebuild, path: solutions/day13/ }
+        - { action: rebuild, path: common/ }
+
+  day14:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: { DAY: '14' }
+    ports: [ "3014:3000" ]
+    develop:
+      watch:
+        - { action: rebuild, path: solutions/day14/ }
+        - { action: rebuild, path: common/ }
+
+  day15:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: { DAY: '15' }
+    ports: [ "3015:3000" ]
+    develop:
+      watch:
+        - { action: rebuild, path: solutions/day15/ }
+        - { action: rebuild, path: common/ }
+
+  day16:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: { DAY: '16' }
+    ports: [ "3016:3000" ]
+    develop:
+      watch:
+        - { action: rebuild, path: solutions/day16/ }
+        - { action: rebuild, path: common/ }
+
+  day17:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: { DAY: '17' }
+    ports: [ "3017:3000" ]
+    develop:
+      watch:
+        - { action: rebuild, path: solutions/day17/ }
+        - { action: rebuild, path: common/ }
+
+  day18:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: { DAY: '18' }
+    ports: [ "3018:3000" ]
+    develop:
+      watch:
+        - { action: rebuild, path: solutions/day18/ }
+        - { action: rebuild, path: common/ }
+
+  day19:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: { DAY: '19' }
+    ports: [ "3019:3000" ]
+    develop:
+      watch:
+        - { action: rebuild, path: solutions/day19/ }
+        - { action: rebuild, path: common/ }
+
+  day20:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: { DAY: '20' }
+    ports: [ "3020:3000" ]
+    develop:
+      watch:
+        - { action: rebuild, path: solutions/day20/ }
+        - { action: rebuild, path: common/ }
+
+  day21:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: { DAY: '21' }
+    ports: [ "3021:3000" ]
+    develop:
+      watch:
+        - { action: rebuild, path: solutions/day21/ }
+        - { action: rebuild, path: common/ }
+
+  day22:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: { DAY: '22' }
+    ports: [ "3022:3000" ]
+    develop:
+      watch:
+        - { action: rebuild, path: solutions/day22/ }
+        - { action: rebuild, path: common/ }
+
+  day23:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: { DAY: '23' }
+    ports: [ "3023:3000" ]
+    develop:
+      watch:
+        - { action: rebuild, path: solutions/day23/ }
+        - { action: rebuild, path: common/ }
+
+  day24:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: { DAY: '24' }
+    ports: [ "3024:3000" ]
+    develop:
+      watch:
+        - { action: rebuild, path: solutions/day24/ }
+        - { action: rebuild, path: common/ }
+
+  day25:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: { DAY: '25' }
+    ports: [ "3025:3000" ]
+    develop:
+      watch:
+        - { action: rebuild, path: solutions/day25/ }
+        - { action: rebuild, path: common/ }

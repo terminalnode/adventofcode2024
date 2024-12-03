@@ -15,15 +15,23 @@ func Setup(
 	part1 Solution,
 	part2 Solution,
 ) {
-	http.HandleFunc("/1", createHandler(part1))
-	http.HandleFunc("/2", createHandler(part2))
+	http.HandleFunc("/1", createHandler(day, 1, part1))
+	http.HandleFunc("/2", createHandler(day, 2, part2))
 	fmt.Printf("Starting Day #%d service on port 3000\n", day)
 	if err := http.ListenAndServe(":3000", nil); err != nil {
 		log.Fatal(err)
 	}
 }
 
-func createHandler(solution func(string) string) func(http.ResponseWriter, *http.Request) {
+func createHandler(
+	day int,
+	part int,
+	solution func(string) string,
+) func(http.ResponseWriter, *http.Request) {
+	if solution == nil {
+		solution = defaultHandler(day, part)
+	}
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := methodMustBePost(w, r); err != nil {
 			fmt.Print(err.Error())
@@ -42,6 +50,15 @@ func createHandler(solution func(string) string) func(http.ResponseWriter, *http
 			http.Error(w, "Error", http.StatusInternalServerError)
 			return
 		}
+	}
+}
+
+func defaultHandler(
+	day int,
+	part int,
+) Solution {
+	return func(input string) string {
+		return fmt.Sprintf("Solution for day %d part %d not implemented yet", day, part)
 	}
 }
 

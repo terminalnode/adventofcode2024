@@ -60,7 +60,7 @@ func part1(input string) string {
 		sum += diff
 	}
 
-	return fmt.Sprintf("Result for part 1: %d\n", sum)
+	return fmt.Sprintf("Result for part 1: %d", sum)
 }
 
 func part2(input string) string {
@@ -79,5 +79,5 @@ func part2(input string) string {
 		sum += l * rightMap[l]
 	}
 
-	return fmt.Sprintf("Result for part 2: %d\n", sum)
+	return fmt.Sprintf("Result for part 2: %d", sum)
 }
