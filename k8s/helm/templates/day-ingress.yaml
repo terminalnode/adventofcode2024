@@ -1,0 +1,25 @@
+# An easier way to do this would be to generate one ingress resource
+# per service, similar to how we have done for deployments and services.
+# But now that I've got this working I think it's kinda clean, even though
+# ImplementationSpecific pathType is bit of a code smell.
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: aoc2024-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          {{- range .Values.days }}
+          - path: /day{{ .day }}(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: aoc2024-day{{ .day }}
+                port:
+                  number: 3000
+          {{- end }}

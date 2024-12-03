@@ -26,8 +26,10 @@ if minikube profile list | grep -q "$profile_name"; then
 else
   echo "Profile $profile_name does not exist, creating..."
   minikube start -p "$profile_name"
-  echo "...and activating."
+  echo "...and activating..."
   minikube profile "$profile_name"
+  echo "...and activating the ingress controller addon (nginx ingress controller)."
+  minikube addons enable ingress
 fi
 
 minikube profile list
