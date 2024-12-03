@@ -19,6 +19,7 @@ func Setup(
 	http.HandleFunc("/health", healthCheckHandler)
 	http.HandleFunc("/health/live", healthCheckHandler)
 	http.HandleFunc("/health/ready", healthCheckHandler)
+	http.HandleFunc("/", unknownPathHandler)
 
 	fmt.Printf("Starting Day #%d service on port 3000\n", day)
 	if err := http.ListenAndServe(":3000", nil); err != nil {
@@ -69,6 +70,14 @@ func healthCheckHandler(
 		http.Error(w, "Error", http.StatusInternalServerError)
 		return
 	}
+}
+
+func unknownPathHandler(
+	w http.ResponseWriter,
+	r *http.Request,
+) {
+	msg := fmt.Sprintf("Invalid path: %s", r.URL.Path)
+	http.Error(w, msg, http.StatusNotFound)
 }
 
 func defaultSolutionHandler(
