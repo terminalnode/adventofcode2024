@@ -40,6 +40,9 @@ func Setup(
 }
 
 func addPrefix(prefix string, url string) string {
+	if prefix == "" {
+		return url
+	}
 	return fmt.Sprintf("/%s%s", prefix, url)
 }
 
