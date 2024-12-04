@@ -34,7 +34,7 @@ func NewMatrixFromRows[T any](
 	// Verify that the Matrix is consistent
 	for i, row := range matrix[1:] {
 		if len(row)-1 != maxX {
-			err := fmt.Errorf("matrix[%d] length (%d) differs from that of the first row (%d)", i, len(row), maxX)
+			err := fmt.Errorf("matrix[%d] length (%d) differs from matrix[0] (%d)", i+1, len(row), maxX+1)
 			return Matrix[T]{}, err
 		}
 	}
