@@ -1,4 +1,7 @@
-# Advent of Code 2024 ![gofmt](https://github.com/terminalnode/adventofcode2024/workflows/gofmt/badge.svg)
+# Advent of Code 2024
+![gofmt](https://github.com/terminalnode/adventofcode2024/workflows/gofmt/badge.svg)
+![go test](https://github.com/terminalnode/adventofcode2024/workflows/go%20test/badge.svg)
+
 This year's advent of code is being solved in Go as a series of microservices
 running in a Kubernetes cluster (or `docker-compose` if you prefer). The Kubernetes
 solution is deployed using Helm and implements service discovery using services and
