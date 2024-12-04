@@ -1,10 +1,23 @@
 services:
+  traefik:
+    image: traefik:v3
+    ports: [ "80:80", "8000:8080" ]
+    command:
+      - "--providers.docker"
+      - "--api.insecure=true"
+      - "--providers.docker.exposedbydefault=false"
+    volumes: [ "/var/run/docker.sock:/var/run/docker.sock:ro" ]
+
   day01:
     build:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '01' }
-    ports: [ "3001:3000" ]
+    environment: { AOC2024_PREFIX: 'day01' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day01.rule=PathPrefix(`/day01`)"
+      - "traefik.http.services.day01.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day01/ }
@@ -15,7 +28,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '02' }
-    ports: [ "3002:3000" ]
+    environment: { AOC2024_PREFIX: 'day02' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day02.rule=PathPrefix(`/day02`)"
+      - "traefik.http.services.day02.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day01/ }
@@ -26,7 +43,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '03' }
-    ports: [ "3003:3000" ]
+    environment: { AOC2024_PREFIX: 'day03' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day03.rule=PathPrefix(`/day03`)"
+      - "traefik.http.services.day03.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day03/ }
@@ -37,7 +58,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '04' }
-    ports: [ "3004:3000" ]
+    environment: { AOC2024_PREFIX: 'day04' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day04.rule=PathPrefix(`/day04`)"
+      - "traefik.http.services.day04.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day04/ }
@@ -48,7 +73,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '05' }
-    ports: [ "3005:3000" ]
+    environment: { AOC2024_PREFIX: 'day05' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day05.rule=PathPrefix(`/day05`)"
+      - "traefik.http.services.day05.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day05/ }
@@ -59,7 +88,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '06' }
-    ports: [ "3006:3000" ]
+    environment: { AOC2024_PREFIX: 'day06' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day06.rule=PathPrefix(`/day06`)"
+      - "traefik.http.services.day06.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day06/ }
@@ -70,7 +103,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '07' }
-    ports: [ "3007:3000" ]
+    environment: { AOC2024_PREFIX: 'day07' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day07.rule=PathPrefix(`/day07`)"
+      - "traefik.http.services.day07.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day07/ }
@@ -81,7 +118,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '08' }
-    ports: [ "3008:3000" ]
+    environment: { AOC2024_PREFIX: 'day08' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day08.rule=PathPrefix(`/day08`)"
+      - "traefik.http.services.day08.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day08/ }
@@ -92,7 +133,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '09' }
-    ports: [ "3009:3000" ]
+    environment: { AOC2024_PREFIX: 'day09' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day09.rule=PathPrefix(`/day09`)"
+      - "traefik.http.services.day09.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day09/ }
@@ -103,7 +148,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '10' }
-    ports: [ "3010:3000" ]
+    environment: { AOC2024_PREFIX: 'day10' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day10.rule=PathPrefix(`/day10`)"
+      - "traefik.http.services.day10.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day10/ }
@@ -114,7 +163,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '11' }
-    ports: [ "3011:3000" ]
+    environment: { AOC2024_PREFIX: 'day11' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day11.rule=PathPrefix(`/day11`)"
+      - "traefik.http.services.day11.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day11/ }
@@ -125,7 +178,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '12' }
-    ports: [ "3012:3000" ]
+    environment: { AOC2024_PREFIX: 'day12' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day12.rule=PathPrefix(`/day12`)"
+      - "traefik.http.services.day12.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day12/ }
@@ -136,7 +193,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '13' }
-    ports: [ "3013:3000" ]
+    environment: { AOC2024_PREFIX: 'day13' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day13.rule=PathPrefix(`/day13`)"
+      - "traefik.http.services.day13.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day13/ }
@@ -147,7 +208,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '14' }
-    ports: [ "3014:3000" ]
+    environment: { AOC2024_PREFIX: 'day14' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day14.rule=PathPrefix(`/day14`)"
+      - "traefik.http.services.day14.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day14/ }
@@ -158,7 +223,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '15' }
-    ports: [ "3015:3000" ]
+    environment: { AOC2024_PREFIX: 'day15' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day15.rule=PathPrefix(`/day15`)"
+      - "traefik.http.services.day15.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day15/ }
@@ -169,7 +238,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '16' }
-    ports: [ "3016:3000" ]
+    environment: { AOC2024_PREFIX: 'day16' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day16.rule=PathPrefix(`/day16`)"
+      - "traefik.http.services.day16.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day16/ }
@@ -180,7 +253,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '17' }
-    ports: [ "3017:3000" ]
+    environment: { AOC2024_PREFIX: 'day17' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day17.rule=PathPrefix(`/day17`)"
+      - "traefik.http.services.day17.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day17/ }
@@ -191,7 +268,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '18' }
-    ports: [ "3018:3000" ]
+    environment: { AOC2024_PREFIX: 'day18' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day18.rule=PathPrefix(`/day18`)"
+      - "traefik.http.services.day18.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day18/ }
@@ -202,7 +283,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '19' }
-    ports: [ "3019:3000" ]
+    environment: { AOC2024_PREFIX: 'day19' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day19.rule=PathPrefix(`/day19`)"
+      - "traefik.http.services.day19.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day19/ }
@@ -213,7 +298,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '20' }
-    ports: [ "3020:3000" ]
+    environment: { AOC2024_PREFIX: 'day20' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day20.rule=PathPrefix(`/day20`)"
+      - "traefik.http.services.day20.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day20/ }
@@ -224,7 +313,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '21' }
-    ports: [ "3021:3000" ]
+    environment: { AOC2024_PREFIX: 'day21' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day21.rule=PathPrefix(`/day21`)"
+      - "traefik.http.services.day21.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day21/ }
@@ -235,7 +328,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '22' }
-    ports: [ "3022:3000" ]
+    environment: { AOC2024_PREFIX: 'day22' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day22.rule=PathPrefix(`/day22`)"
+      - "traefik.http.services.day22.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day22/ }
@@ -246,7 +343,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '23' }
-    ports: [ "3023:3000" ]
+    environment: { AOC2024_PREFIX: 'day23' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day23.rule=PathPrefix(`/day23`)"
+      - "traefik.http.services.day23.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day23/ }
@@ -257,7 +358,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '24' }
-    ports: [ "3024:3000" ]
+    environment: { AOC2024_PREFIX: 'day24' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day24.rule=PathPrefix(`/day24`)"
+      - "traefik.http.services.day24.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day24/ }
@@ -268,7 +373,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '25' }
-    ports: [ "3025:3000" ]
+    environment: { AOC2024_PREFIX: 'day25' }
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.day25.rule=PathPrefix(`/day25`)"
+      - "traefik.http.services.day25.loadbalancer.server.port=3000"
     develop:
       watch:
         - { action: rebuild, path: solutions/day25/ }
