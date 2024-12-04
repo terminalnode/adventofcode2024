@@ -10,7 +10,7 @@ else
   eval $(minikube docker-env)
 fi
 
-if [ "$project" = 'all' ]; then
+if [ "$day" = 'all' ]; then
   for day in {01..25}; do
     docker build -t "aoc2024-day$day" --build-arg DAY="$day" --file "$dockerfile" .
   done
