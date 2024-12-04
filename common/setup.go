@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 )
 
 type Solution = func(string) string
@@ -14,11 +15,21 @@ func Setup(
 	part1 Solution,
 	part2 Solution,
 ) {
-	http.HandleFunc("/1", createSolutionHandler(day, 1, part1))
-	http.HandleFunc("/2", createSolutionHandler(day, 2, part2))
-	http.HandleFunc("/health", healthCheckHandler)
-	http.HandleFunc("/health/live", healthCheckHandler)
-	http.HandleFunc("/health/ready", healthCheckHandler)
+	prefix := os.Getenv("AOC2024_PREFIX")
+
+	http.HandleFunc(addPrefix(prefix, "1"), createSolutionHandler(day, 1, part1))
+	http.HandleFunc(addPrefix(prefix, "2"), createSolutionHandler(day, 2, part2))
+	http.HandleFunc(addPrefix(prefix, "health"), healthCheckHandler)
+	http.HandleFunc(addPrefix(prefix, "health/live"), healthCheckHandler)
+	http.HandleFunc(addPrefix(prefix, "health/ready"), healthCheckHandler)
+
+	if prefix != "" {
+		// For health endpoints, add non-prefixed handlers as well
+		http.HandleFunc("/health", healthCheckHandler)
+		http.HandleFunc("/health/live", healthCheckHandler)
+		http.HandleFunc("/health/ready", healthCheckHandler)
+	}
+
 	http.HandleFunc("/", unknownPathHandler)
 
 	fmt.Printf("Starting Day #%d service on port 3000\n", day)
@@ -26,6 +37,10 @@ func Setup(
 		log.Fatal(err)
 
 	}
+}
+
+func addPrefix(prefix string, url string) string {
+	return fmt.Sprintf("/%s/%s", prefix, url)
 }
 
 func createSolutionHandler(
