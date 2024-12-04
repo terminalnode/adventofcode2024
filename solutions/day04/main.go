@@ -10,7 +10,7 @@ type CharMatrix = util.CharMatrix
 type Coordinate = util.Coordinate
 
 func main() {
-	common.Setup(4, part1, nil)
+	common.Setup(4, part1, part2)
 }
 
 func part1(
@@ -41,6 +41,62 @@ func part1(
 	}
 
 	return fmt.Sprintf("Number of XMAS: %d", count)
+}
+
+func part2(
+	input string,
+) string {
+	m, err := util.NewCharMatrix(input)
+	if err != nil {
+		return fmt.Sprintf("Failed to build matrix: %v", err)
+	}
+	count := 0
+	for x := 1; x < m.MaxX; x++ {
+		for y := 1; y < m.MaxY; y++ {
+			start := Coordinate{X: x, Y: y}
+			if !isThereAThisHere(m, start, 'A') {
+				continue
+			}
+			nw := start.NorthWest()
+			northWest, _ := m.Get(nw.X, nw.Y)
+			if northWest == 'X' {
+				continue
+			}
+
+			ne := start.NorthEast()
+			northEast, _ := m.Get(ne.X, ne.Y)
+			if northEast == 'X' {
+				continue
+			}
+
+			sw := start.SouthWest()
+			southWest, _ := m.Get(sw.X, sw.Y)
+			if southWest == 'X' {
+				continue
+			}
+
+			se := start.SouthEast()
+			southEast, _ := m.Get(se.X, se.Y)
+			if southEast == 'X' {
+				continue
+			}
+
+			northM := northWest == 'M' && northEast == 'M' &&
+				southWest == 'S' && southEast == 'S'
+			southM := northWest == 'S' && northEast == 'S' &&
+				southWest == 'M' && southEast == 'M'
+			eastM := northWest == 'S' && southWest == 'S' &&
+				northEast == 'M' && southEast == 'M'
+			westM := northWest == 'M' && southWest == 'M' &&
+				northEast == 'S' && southEast == 'S'
+
+			if northM || southM || eastM || westM {
+				count += 1
+			}
+		}
+	}
+
+	return fmt.Sprintf("Number of X-shaped MAS: %d", count)
 }
 
 func searchXmas(
