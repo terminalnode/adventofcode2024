@@ -14,6 +14,7 @@ func runCmd(args []string) {
 	day := flagSet.Int("day", 0, "The day to solve")
 	part := flagSet.Int("part", 0, "The part of the provided day to solve")
 	file := flagSet.String("file", "", "Path to the file containing the input data.")
+	url := flagSet.String("url", "localhost", "The URL from which to call the backend.")
 
 	err := flagSet.Parse(args)
 	if err != nil {
@@ -32,7 +33,7 @@ func runCmd(args []string) {
 		os.Exit(1)
 	}
 
-	answer, err := runSolution(*day, *part, input)
+	answer, err := runSolution(*url, *day, *part, input)
 	if err != nil {
 		fmt.Printf("Failed to run solution: %v", err)
 		os.Exit(1)
@@ -51,12 +52,13 @@ func validateDayAndPart(day int, part int) {
 }
 
 func runSolution(
+	url string,
 	day int,
 	part int,
 	input string,
 ) (string, error) {
-	fmt.Printf("Running day %d, part %d\n", day, part)
-	url := fmt.Sprintf("http://localhost:%d/%d", 3000+day, part)
+	url = fmt.Sprintf("http://%s/day%02d/%d", url, day, part)
+	fmt.Printf("Running day %d, part %d with URL '%s'\n", day, part, url)
 	client := &http.Client{}
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte(input)))
