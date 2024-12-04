@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
-project="$1"
+day="$1"
 dockerfile="./Dockerfile"
-
-if [ ! -f "$dockerfile" ]; then
-  echo "Path $dockerfile does not exist, make sure to run the script from project root."
-fi
 
 if [ -z "$(command -v minikube)" ]; then
   echo 'Minikube is not installed, check: https://minikube.sigs.k8s.io/docs/'
@@ -19,5 +15,6 @@ if [ "$project" = 'all' ]; then
     docker build -t "aoc2024-day$day" --build-arg DAY="$day" --file "$dockerfile" .
   done
 else
-  docker build -t "aoc2024-$project" --file "$dockerfile" .
+  docker build -t "aoc2024-day$day" --build-arg DAY="$day" --file "$dockerfile" .
 fi
+
