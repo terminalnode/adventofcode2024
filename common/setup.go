@@ -17,11 +17,11 @@ func Setup(
 ) {
 	prefix := os.Getenv("AOC2024_PREFIX")
 
-	http.HandleFunc(addPrefix(prefix, "1"), createSolutionHandler(day, 1, part1))
-	http.HandleFunc(addPrefix(prefix, "2"), createSolutionHandler(day, 2, part2))
-	http.HandleFunc(addPrefix(prefix, "health"), healthCheckHandler)
-	http.HandleFunc(addPrefix(prefix, "health/live"), healthCheckHandler)
-	http.HandleFunc(addPrefix(prefix, "health/ready"), healthCheckHandler)
+	http.HandleFunc(addPrefix(prefix, "/1"), createSolutionHandler(day, 1, part1))
+	http.HandleFunc(addPrefix(prefix, "/2"), createSolutionHandler(day, 2, part2))
+	http.HandleFunc(addPrefix(prefix, "/health"), healthCheckHandler)
+	http.HandleFunc(addPrefix(prefix, "/health/live"), healthCheckHandler)
+	http.HandleFunc(addPrefix(prefix, "/health/ready"), healthCheckHandler)
 
 	if prefix != "" {
 		// For health endpoints, add non-prefixed handlers as well
@@ -40,7 +40,7 @@ func Setup(
 }
 
 func addPrefix(prefix string, url string) string {
-	return fmt.Sprintf("/%s/%s", prefix, url)
+	return fmt.Sprintf("/%s%s", prefix, url)
 }
 
 func createSolutionHandler(
