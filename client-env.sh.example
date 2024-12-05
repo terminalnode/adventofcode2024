@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Copy this file as `client-env.sh`, removing the `.example` suffix.
+#
+# To get the session token, inspect the requests sent to AoC and copy the Cookie-field of the request.
+# Instructions here: https://github.com/wimglenn/advent-of-code-wim/issues/1
+# Then remove the 'session=' from the beginning of the cookie.
+export AOC2024_INPUT_CACHE_PATH='./input/cache'
+export AOC2024_SESSION_TOKEN='insert-token-here'

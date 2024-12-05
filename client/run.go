@@ -24,12 +24,21 @@ func runCmd(args []string) {
 
 	validateDayAndPart(*day, *part)
 
+	sessionToken := os.Getenv("AOC2024_SESSION_TOKEN")
+
 	var input string
 	switch {
 	case *file != "":
 		input = readFile(*file)
+	case sessionToken != "":
+		data, err := fetchInput(*day, sessionToken)
+		if err != nil {
+			fmt.Printf("Failed to fetch input using session token '%s': %v", sessionToken, err)
+			os.Exit(1)
+		}
+		input = data
 	default:
-		fmt.Printf("No input method selected, can't get puzzle input.\n")
+		fmt.Println("No input method selected and session token not set, can't get puzzle input.")
 		os.Exit(1)
 	}
 

@@ -1,7 +1,12 @@
 input/*
 !input/.gitkeep
 
+!input/cache/
+input/cache/*
+!input/cache/.gitkeep
+
 build/*
 !build/.gitkeep
 
 .idea
+client-env.sh

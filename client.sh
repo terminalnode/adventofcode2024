@@ -3,6 +3,11 @@
 # a binary file
 profile_name='aoc2024'
 url='localhost'
+env_file='./client-env.sh'
+
+if [ -f "$env_file" ]; then
+    source "$env_file"
+fi
 
 if [ -n "$(command -v minikube)" ] && minikube profile list | grep -q "$profile_name"; then
   echo "Minikube is installed and profile '$profile_name' exists, using minikube ip ($(minikube ip))."

@@ -17,6 +17,11 @@ run the solution.
 If you don't want to use the client, curl is also an option:
 `curl -X POST --data-binary @INPUT_FILE http://localhost/DAY/PART`
 
+### Auto-fetch puzzle input
+If you copy the file `./client-env.sh.example` to `./client-env.sh` and fill in your
+session token, the client (when running `./client.sh`) can auto-fetch your puzzle
+input. You can then run the client as only `./client.sh -day DAY -part PART`.
+
 ### Running in Kubernetes
 * Install `minikube` and run `./k8s/start-minikube.sh` to create the `aoc2024` cluster.
 * Then run `./k8s/build.sh all` to build all the docker images, making them available
