@@ -44,7 +44,7 @@ automatically rebuilt and redeployed ever time the `common` module or their own
 | 02  | ⭐ ⭐      | 15  |          |
 | 03  | ⭐ ⭐      | 16  |          |
 | 04  | ⭐ ⭐      | 17  |          |
-| 05  |          | 18  |          |
+| 05  | ⭐        | 18  |          |
 | 06  |          | 19  |          |
 | 07  |          | 20  |          |
 | 08  |          | 21  |          |
