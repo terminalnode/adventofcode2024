@@ -48,12 +48,12 @@ func part2(
 	sum := 0
 	_, filteredManuals := divideCorrectManuals(parsed)
 	for _, manual := range filteredManuals {
-		// Technically we don't need to correct the whole manual
-		corrected, err := correctManual(parsed.rules, manual, PageList{})
+		stopAt := len(manual) / 2
+		corrected, err := correctManual(parsed.rules, manual, PageList{}, stopAt)
 		if err != nil {
 			return fmt.Sprintf("Failed to correct manual %v:\n%v", manual, err)
 		}
-		sum += corrected[len(corrected)/2]
+		sum += corrected[stopAt]
 	}
 
 	return fmt.Sprintf("Sum of middle numbers (corrected manuals): %d", sum)
@@ -171,8 +171,9 @@ func correctManual(
 	rules RuleSet,
 	pageList PageList,
 	result PageList,
+	stopAt int,
 ) (PageList, error) {
-	if len(pageList) == 0 {
+	if len(pageList) == stopAt {
 		return result, nil
 	}
 
@@ -185,7 +186,7 @@ func correctManual(
 
 			rem := append(remaining[:i], remaining[i+1:]...)
 			res := append(result, page)
-			out, err := correctManual(rules, rem, res)
+			out, err := correctManual(rules, rem, res, stopAt)
 			if err == nil {
 				return out, err
 			}
