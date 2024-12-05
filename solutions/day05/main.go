@@ -1,22 +1,23 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
 	"strconv"
 	"strings"
 )
 
-type ruleSet = map[int][]int
-type pageList = []int
+type RuleSet = map[int][]int
+type PageList = []int
 
 type parsedInput = struct {
-	rules   ruleSet
-	manuals []pageList
+	rules   RuleSet
+	manuals []PageList
 }
 
 func main() {
-	common.Setup(5, part1, nil)
+	common.Setup(5, part1, part2)
 }
 
 func part1(
@@ -36,11 +37,33 @@ func part1(
 	return fmt.Sprintf("Sum of middle numbers: %d", sum)
 }
 
+func part2(
+	input string,
+) string {
+	parsed, err := parseInput(input)
+	if err != nil {
+		return fmt.Sprintf("Failed to parse input: %v", err)
+	}
+
+	sum := 0
+	_, filteredManuals := divideCorrectManuals(parsed)
+	for _, manual := range filteredManuals {
+		// Technically we don't need to correct the whole manual
+		corrected, err := correctManual(parsed.rules, manual, PageList{})
+		if err != nil {
+			return fmt.Sprintf("Failed to correct manual %v:\n%v", manual, err)
+		}
+		sum += corrected[len(corrected)/2]
+	}
+
+	return fmt.Sprintf("Sum of middle numbers (corrected manuals): %d", sum)
+}
+
 func divideCorrectManuals(
 	input parsedInput,
-) ([]pageList, []pageList) {
-	var correct []pageList
-	var incorrect []pageList
+) ([]PageList, []PageList) {
+	var correct []PageList
+	var incorrect []PageList
 
 	for _, manual := range input.manuals {
 		if verifyOrder(input.rules, manual) {
@@ -54,8 +77,8 @@ func divideCorrectManuals(
 }
 
 func verifyOrder(
-	rules ruleSet,
-	pages pageList,
+	rules RuleSet,
+	pages PageList,
 ) bool {
 	visited := map[int]bool{}
 
@@ -142,4 +165,52 @@ func parsedManuals(
 	}
 
 	return manuals, nil
+}
+
+func correctManual(
+	rules RuleSet,
+	pageList PageList,
+	result PageList,
+) (PageList, error) {
+	if len(pageList) == 0 {
+		return result, nil
+	}
+
+	remaining := pageList
+	for len(remaining) > 0 {
+		for i, page := range remaining {
+			if !pageIsAnOption(rules, remaining, page) {
+				continue
+			}
+
+			rem := append(remaining[:i], remaining[i+1:]...)
+			res := append(result, page)
+			out, err := correctManual(rules, rem, res)
+			if err == nil {
+				return out, err
+			}
+		}
+	}
+
+	return PageList{}, errors.New("failure")
+}
+
+func pageIsAnOption(
+	rules RuleSet,
+	remaining PageList,
+	this int,
+) bool {
+	for _, other := range remaining {
+		if this == other {
+			continue
+		}
+
+		for _, forbidden := range rules[other] {
+			if this == forbidden {
+				return false
+			}
+		}
+	}
+
+	return true
 }
