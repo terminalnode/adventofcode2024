@@ -6,7 +6,7 @@ import (
 )
 
 type Matrix[T any] struct {
-	matrix [][]T
+	RawMatrix [][]T
 	MaxX   int
 	MaxY   int
 }
@@ -41,7 +41,7 @@ func NewMatrixFromRows[T any](
 	}
 
 	return Matrix[T]{
-		matrix: matrix,
+		RawMatrix: matrix,
 		MaxX:   maxX,
 		MaxY:   maxY,
 	}, nil
@@ -76,7 +76,7 @@ func (m Matrix[T]) Get(
 		var zeroValue T
 		return zeroValue, fmt.Errorf("invalid point (%d,%d)", x, y)
 	}
-	return m.matrix[y][x], nil
+	return m.RawMatrix[y][x], nil
 }
 
 func (m Matrix[T]) GetOrDefault(
@@ -100,6 +100,6 @@ func (m Matrix[T]) Set(
 		return fmt.Errorf("invalid point (%d,%d)", x, y)
 	}
 
-	m.matrix[y][x] = value
+	m.RawMatrix[y][x] = value
 	return nil
 }

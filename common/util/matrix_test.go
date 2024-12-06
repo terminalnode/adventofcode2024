@@ -17,9 +17,9 @@ var rawMatrix = [][]Coordinate{
 	{c(0, 4), c(1, 4), c(2, 4), c(3, 4)},
 }
 var matrix = Matrix[Coordinate]{
-	matrix: rawMatrix,
-	MaxX:   3,
-	MaxY:   4,
+	RawMatrix: rawMatrix,
+	MaxX:      3,
+	MaxY:      4,
 }
 
 func TestNewMatrixFromRows(t *testing.T) {
@@ -38,7 +38,7 @@ func TestNewMatrixFromRows(t *testing.T) {
 			t.Errorf("Expected MaxY=%d, but was %d", matrix.MaxY, testMatrix.MaxY)
 		}
 
-		for y, tmRow := range testMatrix.matrix {
+		for y, tmRow := range testMatrix.RawMatrix {
 			for x, actual := range tmRow {
 				expected := rawMatrix[y][x]
 				if actual != expected {
@@ -57,7 +57,7 @@ func TestNewMatrixFromRows(t *testing.T) {
 			t.Errorf("Expected error '%s' but got %v", errorMsg, err)
 		}
 
-		if testMatrix.MaxX != 0 && testMatrix.MaxY != 0 && len(testMatrix.matrix) != 0 {
+		if testMatrix.MaxX != 0 && testMatrix.MaxY != 0 && len(testMatrix.RawMatrix) != 0 {
 			t.Errorf("Expected zero-matrix in response, but was %q", testMatrix)
 		}
 	})
@@ -71,7 +71,7 @@ func TestNewMatrixFromRows(t *testing.T) {
 			t.Errorf("Expected error '%s' but got %v", errorMsg, err)
 		}
 
-		if testMatrix.MaxX != 0 && testMatrix.MaxY != 0 && len(testMatrix.matrix) != 0 {
+		if testMatrix.MaxX != 0 && testMatrix.MaxY != 0 && len(testMatrix.RawMatrix) != 0 {
 			t.Errorf("Expected zero-matrix in response, but was %q", testMatrix)
 		}
 	})
@@ -99,7 +99,7 @@ func TestNewCharMatrix(t *testing.T) {
 			t.Errorf("Expected MaxY=2, but was %d", testMatrix.MaxY)
 		}
 
-		for y, tmRow := range testMatrix.matrix {
+		for y, tmRow := range testMatrix.RawMatrix {
 			for x, actual := range tmRow {
 				expected := sl[y][x]
 				if actual != expected {
@@ -118,7 +118,7 @@ func TestNewCharMatrix(t *testing.T) {
 			t.Errorf("Expected error '%s' but got %v", errorMsg, err)
 		}
 
-		if testMatrix.MaxX != 0 && testMatrix.MaxY != 0 && len(testMatrix.matrix) != 0 {
+		if testMatrix.MaxX != 0 && testMatrix.MaxY != 0 && len(testMatrix.RawMatrix) != 0 {
 			t.Errorf("Expected zero-matrix in response, but was %q", testMatrix)
 		}
 	})
@@ -132,7 +132,7 @@ func TestNewCharMatrix(t *testing.T) {
 			t.Errorf("Expected error '%s' but got %v", errorMsg, err)
 		}
 
-		if testMatrix.MaxX != 0 && testMatrix.MaxY != 0 && len(testMatrix.matrix) != 0 {
+		if testMatrix.MaxX != 0 && testMatrix.MaxY != 0 && len(testMatrix.RawMatrix) != 0 {
 			t.Errorf("Expected zero-matrix in response, but was %q", testMatrix)
 		}
 	})
