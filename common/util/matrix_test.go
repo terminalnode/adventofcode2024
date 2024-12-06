@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -213,5 +214,47 @@ func TestMatrix_GetOrDefault(t *testing.T) {
 				}
 			}
 		}
+	}
+}
+
+func TestMatrix_Set(t *testing.T) {
+	raw := [][]int{{1, 1}, {1, 1}}
+	m, creationErr := NewMatrixFromRows(raw)
+	coords := []Coordinate{c(0, 0), c(0, 1), c(1, 0), c(1, 1)}
+
+	for _, point := range coords {
+		name := fmt.Sprintf("Changing at point %v", point)
+		t.Run(name, func(t *testing.T) {
+			if creationErr != nil {
+				t.Error("Initialization of matrix failed")
+			}
+
+			curV, err := m.Get(point.X, point.Y)
+			if err != nil {
+				t.Error("Failed to get current value")
+			}
+
+			expectedNewV := curV * 10
+			err = m.Set(point.X, point.Y, expectedNewV)
+			if err != nil {
+				t.Error("Failed to set value")
+			}
+
+			actualNewV, err := m.Get(point.X, point.Y)
+			if err != nil {
+				t.Error("Failed to get new value")
+			}
+
+			if actualNewV != expectedNewV {
+				t.Errorf("Expected new value %d, but was %d", expectedNewV, actualNewV)
+			}
+		})
+
+		t.Run("Setting point outside of matrix", func(t *testing.T) {
+			err := m.Set(2, 1, 1337)
+			if err == nil {
+				t.Error("Expected error from setting (2,1), but got nil")
+			}
+		})
 	}
 }

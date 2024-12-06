@@ -90,3 +90,16 @@ func (m Matrix[T]) GetOrDefault(
 	}
 	return v, nil
 }
+
+func (m Matrix[T]) Set(
+	x int,
+	y int,
+	value T,
+) error {
+	if !m.IsInMatrix(x, y) {
+		return fmt.Errorf("invalid point (%d,%d)", x, y)
+	}
+
+	m.matrix[y][x] = value
+	return nil
+}
