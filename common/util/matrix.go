@@ -60,7 +60,7 @@ func NewCharMatrix(
 	return NewMatrixFromRows[uint8](rows)
 }
 
-func (m Matrix[T]) IsInMatrix(
+func (m *Matrix[T]) IsInMatrix(
 	x int,
 	y int,
 ) bool {
@@ -68,7 +68,7 @@ func (m Matrix[T]) IsInMatrix(
 	return !invalid
 }
 
-func (m Matrix[T]) Get(
+func (m *Matrix[T]) Get(
 	x int,
 	y int,
 ) (T, error) {
@@ -79,7 +79,7 @@ func (m Matrix[T]) Get(
 	return m.RawMatrix[y][x], nil
 }
 
-func (m Matrix[T]) GetOrDefault(
+func (m *Matrix[T]) GetOrDefault(
 	x int,
 	y int,
 	defaultReturn T,
@@ -91,7 +91,7 @@ func (m Matrix[T]) GetOrDefault(
 	return v, nil
 }
 
-func (m Matrix[T]) Set(
+func (m *Matrix[T]) Set(
 	x int,
 	y int,
 	value T,
