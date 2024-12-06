@@ -4,6 +4,7 @@ RUN apk --no-cache add curl
 FROM golang-with-curl
 WORKDIR /app
 COPY go.mod .
+COPY go.sum .
 COPY common common
 
 ARG DAY

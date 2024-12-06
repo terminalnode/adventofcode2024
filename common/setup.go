@@ -2,6 +2,7 @@ package common
 
 import (
 	"context"
+	"github.com/terminalnode/adventofcode2024/common/proto"
 	"github.com/terminalnode/adventofcode2024/common/util"
 	"github.com/terminalnode/adventofcode2024/common/web"
 	"log"
@@ -17,11 +18,17 @@ func Setup(
 	part2 util.Solution,
 ) {
 	httpServer := web.CreateHttpServer(day, part1, part2)
+	grpcServer := proto.CreateGRPCServer(":50051", day, part1, part2)
 
 	// Open a signal channel, listening for SIGTERM and SIGINT
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, syscall.SIGTERM, syscall.SIGINT, syscall.SIGHUP)
 	log.Printf("Received signal %s, shutting down...", <-signalChan)
+
+	go func() {
+		grpcServer.GracefulStop()
+		log.Printf("gRPC server shut down gracefully")
+	}()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
