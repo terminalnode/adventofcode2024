@@ -14,6 +14,9 @@ type Coordinate = util.Coordinate
 type BoolMatrix = util.BoolMatrix
 type direction = int
 
+// VisitedDirectionMap is meant to go from x => y => direction
+type tVisitedMap map[int]map[int]map[int]bool
+
 var directions = []util.Direction{
 	Coordinate.North,
 	Coordinate.East,
@@ -25,7 +28,7 @@ type parsedInput struct {
 	Guard       Coordinate
 	Direction   direction
 	ObstacleMap BoolMatrix
-	VisitedMap  BoolMatrix
+	VisitedMap  tVisitedMap
 }
 
 func main() {
@@ -43,7 +46,12 @@ func part1(
 	for parsed.move() {
 		// Do nothing, move() does all the work
 	}
-	count := util.CountInMatrix(parsed.VisitedMap, true)
+
+	var count int
+	for _, xMap := range parsed.VisitedMap {
+		count += len(xMap)
+	}
+
 	return fmt.Sprintf("Visited spots in the Matrix: %d", count)
 }
 
@@ -52,7 +60,6 @@ func parseInput(
 ) (parsedInput, error) {
 	var guard Coordinate
 	var obstacles BoolMatrix
-	var visited BoolMatrix
 	var err error
 
 	lines := strings.Split(input, "\n")
@@ -60,12 +67,11 @@ func parseInput(
 	maxX := len(lines[0]) - 1
 
 	rawObstacles := make([][]bool, maxY+1)
-	rawVisited := make([][]bool, maxY+1)
+	visitedMap := make(tVisitedMap)
 
 	foundGuard := false
 	for y := 0; y <= maxY; y++ {
 		rawObstacles[y] = make([]bool, maxX+1)
-		rawVisited[y] = make([]bool, maxX+1)
 
 		for x := 0; x <= maxX; x++ {
 			c := lines[y][x]
@@ -73,7 +79,6 @@ func parseInput(
 			if c == '^' {
 				foundGuard = true
 				guard = Coordinate{X: x, Y: y}
-				rawVisited[y][x] = true
 			}
 		}
 	}
@@ -86,17 +91,15 @@ func parseInput(
 		return parsedInput{}, fmt.Errorf("failed to create obstacle matrix: %v", err)
 	}
 
-	visited, err = util.NewMatrixFromRows(rawVisited)
-	if err != nil {
-		return parsedInput{}, fmt.Errorf("failed to create visited matrix: %v", err)
-	}
-
-	return parsedInput{
+	out := parsedInput{
 		Guard:       guard,
 		Direction:   0, // This means north
 		ObstacleMap: obstacles,
-		VisitedMap:  visited,
-	}, nil
+		VisitedMap:  visitedMap,
+	}
+	out.markVisited(guard)
+
+	return out, nil
 }
 
 // Move and return a boolean indicating whether the guard is inside the matrix or not
@@ -112,9 +115,24 @@ func (
 		newPos = getNewPosition(p.Guard, p.Direction)
 	}
 	p.Guard = newPos
+	if !p.ObstacleMap.IsInMatrix(p.Guard.X, p.Guard.Y) {
+		return false
+	}
 
-	err = p.VisitedMap.Set(p.Guard.X, p.Guard.Y, true)
-	return err == nil
+	p.markVisited(newPos)
+	return true
+}
+
+func (p *parsedInput) markVisited(
+	c Coordinate,
+) {
+	if p.VisitedMap[c.X] == nil {
+		p.VisitedMap[c.X] = make(map[int]map[int]bool)
+	}
+	if p.VisitedMap[c.X][c.Y] == nil {
+		p.VisitedMap[c.X][c.Y] = make(map[int]bool)
+	}
+	p.VisitedMap[c.X][c.Y][p.Direction] = true
 }
 
 func (p *parsedInput) rotate() {
