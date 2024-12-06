@@ -258,3 +258,36 @@ func TestMatrix_Set(t *testing.T) {
 		})
 	}
 }
+
+func TestCountInMatrix(t *testing.T) {
+	m, err := NewMatrixFromRows([][]int{{1, 2, 3, 1}, {2, 3, 3, 1}, {3, 1, 2, 1}})
+	count1 := 5
+	count2 := 3
+	count3 := 4
+	count4 := 0
+
+	if err != nil {
+		t.Error("Failed to construct matrix")
+	}
+	var count int
+
+	count = CountInMatrix(m, 1)
+	if count != count1 {
+		t.Errorf("Expected %d number of ones, got %d", count1, count)
+	}
+
+	count = CountInMatrix(m, 2)
+	if count != count2 {
+		t.Errorf("Expected %d number of ones, got %d", count2, count)
+	}
+
+	count = CountInMatrix(m, 3)
+	if count != count3 {
+		t.Errorf("Expected %d number of ones, got %d", count3, count)
+	}
+
+	count = CountInMatrix(m, 4)
+	if count != count4 {
+		t.Errorf("Expected %d number of ones, got %d", count4, count)
+	}
+}

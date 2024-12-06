@@ -7,8 +7,8 @@ import (
 
 type Matrix[T any] struct {
 	RawMatrix [][]T
-	MaxX   int
-	MaxY   int
+	MaxX      int
+	MaxY      int
 }
 
 type IntMatrix = Matrix[int]
@@ -42,8 +42,8 @@ func NewMatrixFromRows[T any](
 
 	return Matrix[T]{
 		RawMatrix: matrix,
-		MaxX:   maxX,
-		MaxY:   maxY,
+		MaxX:      maxX,
+		MaxY:      maxY,
 	}, nil
 }
 
@@ -102,4 +102,19 @@ func (m Matrix[T]) Set(
 
 	m.RawMatrix[y][x] = value
 	return nil
+}
+
+func CountInMatrix[T comparable](
+	m Matrix[T],
+	value T,
+) int {
+	count := 0
+	for x := 0; x <= m.MaxX; x++ {
+		for y := 0; y <= m.MaxY; y++ {
+			if m.RawMatrix[y][x] == value {
+				count += 1
+			}
+		}
+	}
+	return count
 }
