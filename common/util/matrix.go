@@ -25,6 +25,7 @@ type UInt64Matrix = Matrix[uint64]
 
 type CharMatrix = UInt8Matrix
 type BoolMatrix = Matrix[bool]
+type StringMatrix = Matrix[string]
 
 func NewMatrixFromRows[T any](
 	matrix [][]T,
