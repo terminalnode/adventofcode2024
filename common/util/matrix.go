@@ -24,6 +24,7 @@ type UInt32Matrix = Matrix[uint32]
 type UInt64Matrix = Matrix[uint64]
 
 type CharMatrix = UInt8Matrix
+type BoolMatrix = Matrix[bool]
 
 func NewMatrixFromRows[T any](
 	matrix [][]T,
@@ -76,4 +77,16 @@ func (m Matrix[T]) Get(
 		return zeroValue, fmt.Errorf("invalid point (%d,%d)", x, y)
 	}
 	return m.matrix[y][x], nil
+}
+
+func (m Matrix[T]) GetOrDefault(
+	x int,
+	y int,
+	defaultReturn T,
+) (T, error) {
+	v, err := m.Get(x, y)
+	if err != nil {
+		return defaultReturn, err
+	}
+	return v, nil
 }

@@ -185,3 +185,33 @@ func TestMatrix_Get(t *testing.T) {
 		}
 	}
 }
+
+func TestMatrix_GetOrDefault(t *testing.T) {
+	defaultValue := Coordinate{1337, 420}
+
+	for x := -1; x <= matrix.MaxX+1; x++ {
+		for y := -1; y <= matrix.MaxY+1; y++ {
+			expected := Coordinate{X: x, Y: y}
+			actual, err := matrix.GetOrDefault(x, y, defaultValue)
+			isIn := matrix.IsInMatrix(x, y)
+
+			if isIn {
+				if actual != expected {
+					t.Errorf("Expected %v, but was %v", expected, actual)
+				}
+
+				if err != nil {
+					t.Errorf("Expected an error, but got nil")
+				}
+			} else {
+				if actual != defaultValue {
+					t.Errorf("Expected default value fallback (%v), but got %v", defaultValue, actual)
+				}
+
+				if err == nil {
+					t.Errorf("Expected err to be nil, but was %v", err)
+				}
+			}
+		}
+	}
+}
