@@ -25,14 +25,14 @@ var directions = []util.Direction{
 }
 
 type parsedInput struct {
-	Guard       Coordinate
-	Direction   direction
-	ObstacleMap BoolMatrix
-	VisitedMap  tVisitedMap
+	Guard          Coordinate
+	Direction      direction
+	ObstacleMatrix BoolMatrix
+	VisitedMap     tVisitedMap
 }
 
 func main() {
-	common.Setup(6, part1, nil)
+	common.Setup(6, part1, part2)
 }
 
 func part1(
@@ -53,6 +53,55 @@ func part1(
 	}
 
 	return fmt.Sprintf("Visited spots in the Matrix: %d", count)
+}
+
+func part2(
+	input string,
+) string {
+	// Solve part 1 first to know where to place obstacles
+	original, err := parseInput(input)
+	if err != nil {
+		return fmt.Sprintf("Failed to parse input: %v", err)
+	}
+
+	originalX := original.Guard.X
+	originalY := original.Guard.Y
+	for original.move() {
+		// Do nothing, move() does all the work
+	}
+
+	// Then loop through all positions the guard will visit and place an obstacle
+	count := 0
+	attempts := 0
+	//for x := 0; x <= original.ObstacleMatrix.MaxX; x++ {
+	for x, yMap := range original.VisitedMap {
+		//for y := 0; y <= original.ObstacleMatrix.MaxY; y++ {
+		for y := range yMap {
+			if y == originalY && x == originalX {
+				continue
+			}
+			attempts++
+
+			// Reset the map with the new obstacle
+			original.Guard = Coordinate{X: originalX, Y: originalY}
+			original.Direction = 0
+			original.VisitedMap = make(tVisitedMap)
+			_ = original.ObstacleMatrix.Set(x, y, true)
+
+			// Run this variant
+			for original.move() {
+				// Do nothing, move() does all the work
+			}
+			_ = original.ObstacleMatrix.Set(x, y, false)
+
+			// If the guard is still in the matrix, he's in a loop
+			if original.guardIsInMatrix() {
+				count += 1
+			}
+		}
+	}
+
+	return fmt.Sprintf("%d of the available %d positions make him loopy!", count, attempts)
 }
 
 func parseInput(
@@ -92,47 +141,51 @@ func parseInput(
 	}
 
 	out := parsedInput{
-		Guard:       guard,
-		Direction:   0, // This means north
-		ObstacleMap: obstacles,
-		VisitedMap:  visitedMap,
+		Guard:          guard,
+		Direction:      0, // This means north
+		ObstacleMatrix: obstacles,
+		VisitedMap:     visitedMap,
 	}
-	out.markVisited(guard)
+	out.checkIfVisitedAndMark(guard)
 
 	return out, nil
 }
 
-// Move and return a boolean indicating whether the guard is inside the matrix or not
-func (
-	p *parsedInput,
-) move() bool {
+// Move and return a boolean indicating whether the guard is stuck in a loop or inside the matrix
+// True means he's stuck or out, false means he's inside on a non-visited spot.
+func (p *parsedInput) move() bool {
 	newPos := getNewPosition(p.Guard, p.Direction)
-	isBlocked, err := p.ObstacleMap.Get(newPos.X, newPos.Y)
+	isBlocked, err := p.ObstacleMatrix.Get(newPos.X, newPos.Y)
 	if err != nil {
+		p.Guard = newPos
 		return false
 	} else if isBlocked {
 		p.rotate()
-		newPos = getNewPosition(p.Guard, p.Direction)
+		return !p.checkIfVisitedAndMark(p.Guard)
 	}
 	p.Guard = newPos
-	if !p.ObstacleMap.IsInMatrix(p.Guard.X, p.Guard.Y) {
+
+	if p.checkIfVisitedAndMark(newPos) {
 		return false
 	}
 
-	p.markVisited(newPos)
 	return true
 }
 
-func (p *parsedInput) markVisited(
-	c Coordinate,
-) {
+func (p *parsedInput) guardIsInMatrix() bool {
+	return p.ObstacleMatrix.IsInMatrix(p.Guard.X, p.Guard.Y)
+}
+
+func (p *parsedInput) checkIfVisitedAndMark(c Coordinate) bool {
 	if p.VisitedMap[c.X] == nil {
 		p.VisitedMap[c.X] = make(map[int]map[int]bool)
 	}
 	if p.VisitedMap[c.X][c.Y] == nil {
 		p.VisitedMap[c.X][c.Y] = make(map[int]bool)
 	}
+	old := p.VisitedMap[c.X][c.Y][p.Direction]
 	p.VisitedMap[c.X][c.Y][p.Direction] = true
+	return old
 }
 
 func (p *parsedInput) rotate() {
