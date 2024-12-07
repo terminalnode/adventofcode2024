@@ -13,7 +13,7 @@ type equation = struct {
 }
 
 func main() {
-	common.Setup(7, part1, nil)
+	common.Setup(7, part1, part2)
 }
 
 func part1(
@@ -26,7 +26,25 @@ func part1(
 
 	sum := 0
 	for _, eq := range equations {
-		if validateEquation(eq.Ops[0], eq.Test, eq.Ops[1:]) {
+		if validateEquation(eq.Ops[0], eq.Test, eq.Ops[1:], false) {
+			sum += eq.Test
+		}
+	}
+
+	return fmt.Sprintf("Sum of all OK tests: %d", sum)
+}
+
+func part2(
+	input string,
+) string {
+	equations, err := parseEquations(input)
+	if err != nil {
+		return fmt.Sprintf("Failed to parse input: %v", err)
+	}
+
+	sum := 0
+	for _, eq := range equations {
+		if validateEquation(eq.Ops[0], eq.Test, eq.Ops[1:], true) {
 			sum += eq.Test
 		}
 	}
@@ -70,6 +88,7 @@ func validateEquation(
 	currentValue int,
 	targetValue int,
 	operators []int,
+	useConcatenationOperator bool,
 ) bool {
 	if currentValue > targetValue {
 		return false
@@ -77,7 +96,17 @@ func validateEquation(
 		return currentValue == targetValue
 	}
 	next := operators[0]
-	mul := validateEquation(currentValue*next, targetValue, operators[1:])
-	add := validateEquation(currentValue+next, targetValue, operators[1:])
-	return mul || add
+	mul := validateEquation(currentValue*next, targetValue, operators[1:], useConcatenationOperator)
+	add := validateEquation(currentValue+next, targetValue, operators[1:], useConcatenationOperator)
+	conc := false
+
+	if useConcatenationOperator {
+		s := fmt.Sprintf("%d%d", currentValue, next)
+		n, err := strconv.ParseInt(s, 10, 0)
+		if err == nil {
+			conc = validateEquation(int(n), targetValue, operators[1:], true)
+		}
+	}
+
+	return mul || add || conc
 }
