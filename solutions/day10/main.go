@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	common.Setup(10, part1, nil)
+	common.Setup(10, part1, part2)
 }
 
 func part1(
@@ -32,6 +32,27 @@ func part1(
 	}
 
 	return fmt.Sprintf("Number of trails: %d", out)
+}
+
+func part2(
+	input string,
+) string {
+	topo := parseTopographicMap(input)
+
+	out := 0
+	for y := 0; y < len(topo); y++ {
+		row := topo[y]
+		for x := 0; x < len(row); x++ {
+			value := topo[y][x]
+			if value != 0 {
+				continue
+			}
+
+			out += countDistinctTrails(topo, util.Coordinate{X: x, Y: y}, 0)
+		}
+	}
+
+	return fmt.Sprintf("Number of distinct trails: %d", out)
 }
 
 func parseTopographicMap(
@@ -79,4 +100,35 @@ func buildMapForPart1(
 			buildMapForPart1(topographicMap, nineMap, newPos, value)
 		}
 	}
+}
+
+func countDistinctTrails(
+	topographicMap [][]int,
+	position util.Coordinate,
+	value int,
+) int {
+	if value == 9 {
+		return 1
+	}
+
+	cs := []util.Coordinate{
+		position.North(),
+		position.East(),
+		position.South(),
+		position.West(),
+	}
+
+	out := 0
+	for _, c := range cs {
+		if !util.In2DArray(c, topographicMap) {
+			continue
+		}
+
+		cValue := topographicMap[c.Y][c.X]
+		if cValue == value+1 {
+			out += countDistinctTrails(topographicMap, c, cValue)
+		}
+	}
+
+	return out
 }
