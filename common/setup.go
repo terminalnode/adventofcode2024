@@ -1,11 +1,16 @@
 package common
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 )
 
 type Solution = func(string) string
@@ -16,7 +21,6 @@ func Setup(
 	part2 Solution,
 ) {
 	prefix := os.Getenv("AOC2024_PREFIX")
-
 	http.HandleFunc(addPrefix(prefix, "/1"), createSolutionHandler(day, 1, part1))
 	http.HandleFunc(addPrefix(prefix, "/2"), createSolutionHandler(day, 2, part2))
 	http.HandleFunc(addPrefix(prefix, "/health"), healthCheckHandler)
@@ -32,11 +36,27 @@ func Setup(
 
 	http.HandleFunc("/", unknownPathHandler)
 
-	fmt.Printf("Starting Day #%d service on port 3000\n", day)
-	if err := http.ListenAndServe(":3000", nil); err != nil {
-		log.Fatal(err)
+	// Run the HTTP server on port 8080 in the background
+	server := &http.Server{Addr: ":8080", Handler: nil}
+	go func() {
+		log.Printf("Starting Day #%d service on port 8080", day)
+		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Fatalf("Fatal server error: %v", err)
+		}
+	}()
 
+	// Open a signal channel, listening for SIGTERM and SIGINT
+	signalChan := make(chan os.Signal, 1)
+	signal.Notify(signalChan, syscall.SIGTERM, syscall.SIGINT, syscall.SIGHUP)
+	log.Printf("Received signal %s, shutting down...", <-signalChan)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := server.Shutdown(ctx); err != nil {
+		log.Fatalf("Server forced to shutdown: %v", err)
 	}
+
+	log.Println("Server exited")
 }
 
 func addPrefix(prefix string, url string) string {
