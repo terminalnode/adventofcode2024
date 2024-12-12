@@ -18,7 +18,7 @@ func Setup(
 	part2 util.Solution,
 ) {
 	httpServer := web.CreateHttpServer(day, part1, part2)
-	grpcServer := proto.CreateGRPCServer(":50051", day, part1, part2)
+	grpcServer := proto.CreateGRPCServer(day, part1, part2)
 
 	// Open a signal channel, listening for SIGTERM and SIGINT
 	signalChan := make(chan os.Signal, 1)

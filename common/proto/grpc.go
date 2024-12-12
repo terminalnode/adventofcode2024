@@ -2,6 +2,8 @@ package proto
 
 import (
 	"context"
+	"fmt"
+	"github.com/terminalnode/adventofcode2024/common/env"
 	"github.com/terminalnode/adventofcode2024/common/util"
 	"google.golang.org/grpc"
 	"log"
@@ -15,12 +17,14 @@ type server struct {
 }
 
 func CreateGRPCServer(
-	port string,
 	day int,
 	part1 util.Solution,
 	part2 util.Solution,
 ) *grpc.Server {
-	lis, err := net.Listen("tcp", port)
+	port := env.GetStringOrDefault(env.GrpcPort, "50051")
+	addr := fmt.Sprintf(":%s", port)
+
+	lis, err := net.Listen("tcp", addr)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}

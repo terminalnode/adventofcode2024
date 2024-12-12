@@ -3,10 +3,10 @@ package web
 import (
 	"errors"
 	"fmt"
+	"github.com/terminalnode/adventofcode2024/common/env"
 	"github.com/terminalnode/adventofcode2024/common/util"
 	"log"
 	"net/http"
-	"os"
 )
 
 func CreateHttpServer(
@@ -14,17 +14,19 @@ func CreateHttpServer(
 	part1 util.Solution,
 	part2 util.Solution,
 ) *http.Server {
-	prefix := os.Getenv("AOC2024_PREFIX")
+	prefix := env.GetString(env.HttpPrefix)
+	port := env.GetStringOrDefault(env.HttpPort, "3000")
+	addr := fmt.Sprintf(":%s", port)
 
-	server := &http.Server{Addr: ":3000", Handler: nil}
+	server := &http.Server{Addr: addr, Handler: nil}
 	addHealthCheckHandlers(prefix)
 	addSolutionHandlers(prefix, day, part1, part2)
 	addUnknownPathHandlers()
 
 	go func() {
-		log.Printf("Starting Day #%d service on port 3000", day)
+		log.Printf("HTTP server for day #%d starting on port %s", day, addr)
 		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			log.Fatalf("Fatal server error: %v", err)
+			log.Fatalf("Fatal HTTP server error: %v", err)
 		}
 	}()
 	return server
