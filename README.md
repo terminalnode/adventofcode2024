@@ -56,5 +56,5 @@ automatically rebuilt and redeployed ever time the `common` module or their own
 | 09  |          | 22  |          |
 | 10  | ⭐ ⭐      | 23  |          |
 | 11  | ⭐ ⭐      | 24  |          |
-| 12  |          | 25  |          |
+| 12  | ⭐        | 25  |          |
 | 13  |          |     |          |
