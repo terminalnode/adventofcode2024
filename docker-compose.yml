@@ -13,7 +13,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '01' }
-    environment: { AOC2024_PREFIX: 'day01' }
+    environment: { AOC2024_HTTP_PREFIX: 'day01' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day01.rule=PathPrefix(`/day01`)"
@@ -28,7 +28,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '02' }
-    environment: { AOC2024_PREFIX: 'day02' }
+    environment: { AOC2024_HTTP_PREFIX: 'day02' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day02.rule=PathPrefix(`/day02`)"
@@ -43,7 +43,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '03' }
-    environment: { AOC2024_PREFIX: 'day03' }
+    environment: { AOC2024_HTTP_PREFIX: 'day03' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day03.rule=PathPrefix(`/day03`)"
@@ -58,7 +58,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '04' }
-    environment: { AOC2024_PREFIX: 'day04' }
+    environment: { AOC2024_HTTP_PREFIX: 'day04' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day04.rule=PathPrefix(`/day04`)"
@@ -73,7 +73,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '05' }
-    environment: { AOC2024_PREFIX: 'day05' }
+    environment: { AOC2024_HTTP_PREFIX: 'day05' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day05.rule=PathPrefix(`/day05`)"
@@ -88,7 +88,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '06' }
-    environment: { AOC2024_PREFIX: 'day06' }
+    environment: { AOC2024_HTTP_PREFIX: 'day06' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day06.rule=PathPrefix(`/day06`)"
@@ -103,7 +103,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '07' }
-    environment: { AOC2024_PREFIX: 'day07' }
+    environment: { AOC2024_HTTP_PREFIX: 'day07' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day07.rule=PathPrefix(`/day07`)"
@@ -118,7 +118,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '08' }
-    environment: { AOC2024_PREFIX: 'day08' }
+    environment: { AOC2024_HTTP_PREFIX: 'day08' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day08.rule=PathPrefix(`/day08`)"
@@ -133,7 +133,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '09' }
-    environment: { AOC2024_PREFIX: 'day09' }
+    environment: { AOC2024_HTTP_PREFIX: 'day09' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day09.rule=PathPrefix(`/day09`)"
@@ -148,7 +148,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '10' }
-    environment: { AOC2024_PREFIX: 'day10' }
+    environment: { AOC2024_HTTP_PREFIX: 'day10' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day10.rule=PathPrefix(`/day10`)"
@@ -163,7 +163,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '11' }
-    environment: { AOC2024_PREFIX: 'day11' }
+    environment: { AOC2024_HTTP_PREFIX: 'day11' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day11.rule=PathPrefix(`/day11`)"
@@ -178,7 +178,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '12' }
-    environment: { AOC2024_PREFIX: 'day12' }
+    environment: { AOC2024_HTTP_PREFIX: 'day12' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day12.rule=PathPrefix(`/day12`)"
@@ -193,7 +193,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '13' }
-    environment: { AOC2024_PREFIX: 'day13' }
+    environment: { AOC2024_HTTP_PREFIX: 'day13' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day13.rule=PathPrefix(`/day13`)"
@@ -208,7 +208,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '14' }
-    environment: { AOC2024_PREFIX: 'day14' }
+    environment: { AOC2024_HTTP_PREFIX: 'day14' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day14.rule=PathPrefix(`/day14`)"
@@ -223,7 +223,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '15' }
-    environment: { AOC2024_PREFIX: 'day15' }
+    environment: { AOC2024_HTTP_PREFIX: 'day15' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day15.rule=PathPrefix(`/day15`)"
@@ -238,7 +238,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '16' }
-    environment: { AOC2024_PREFIX: 'day16' }
+    environment: { AOC2024_HTTP_PREFIX: 'day16' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day16.rule=PathPrefix(`/day16`)"
@@ -253,7 +253,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '17' }
-    environment: { AOC2024_PREFIX: 'day17' }
+    environment: { AOC2024_HTTP_PREFIX: 'day17' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day17.rule=PathPrefix(`/day17`)"
@@ -268,7 +268,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '18' }
-    environment: { AOC2024_PREFIX: 'day18' }
+    environment: { AOC2024_HTTP_PREFIX: 'day18' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day18.rule=PathPrefix(`/day18`)"
@@ -283,7 +283,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '19' }
-    environment: { AOC2024_PREFIX: 'day19' }
+    environment: { AOC2024_HTTP_PREFIX: 'day19' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day19.rule=PathPrefix(`/day19`)"
@@ -298,7 +298,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '20' }
-    environment: { AOC2024_PREFIX: 'day20' }
+    environment: { AOC2024_HTTP_PREFIX: 'day20' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day20.rule=PathPrefix(`/day20`)"
@@ -313,7 +313,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '21' }
-    environment: { AOC2024_PREFIX: 'day21' }
+    environment: { AOC2024_HTTP_PREFIX: 'day21' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day21.rule=PathPrefix(`/day21`)"
@@ -328,7 +328,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '22' }
-    environment: { AOC2024_PREFIX: 'day22' }
+    environment: { AOC2024_HTTP_PREFIX: 'day22' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day22.rule=PathPrefix(`/day22`)"
@@ -343,7 +343,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '23' }
-    environment: { AOC2024_PREFIX: 'day23' }
+    environment: { AOC2024_HTTP_PREFIX: 'day23' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day23.rule=PathPrefix(`/day23`)"
@@ -358,7 +358,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '24' }
-    environment: { AOC2024_PREFIX: 'day24' }
+    environment: { AOC2024_HTTP_PREFIX: 'day24' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day24.rule=PathPrefix(`/day24`)"
@@ -373,7 +373,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args: { DAY: '25' }
-    environment: { AOC2024_PREFIX: 'day25' }
+    environment: { AOC2024_HTTP_PREFIX: 'day25' }
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.day25.rule=PathPrefix(`/day25`)"

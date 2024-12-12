@@ -1,8 +1,13 @@
+FROM golang:1.23-alpine AS deps
+COPY go.mod go.sum ./
+RUN go mod download
+
 FROM golang:1.23-alpine AS golang-with-curl
 RUN apk --no-cache add curl
 
 FROM golang-with-curl
 WORKDIR /app
+COPY --from=deps /go/pkg/mod /go/pkg/mod
 COPY go.mod .
 COPY go.sum .
 COPY common common
