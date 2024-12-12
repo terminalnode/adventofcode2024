@@ -15,7 +15,7 @@ type plot struct {
 }
 
 func main() {
-	common.Setup(12, part1, nil)
+	common.Setup(12, part1, part2)
 }
 
 func part1(
@@ -99,6 +99,7 @@ func countField(
 		return 0, 0, 0
 	}
 	visited[c.String()] = true
+	label := plots[c.Y][c.X].Label
 
 	area := 1
 	perimeter := 0
@@ -107,13 +108,22 @@ func countField(
 	e := c.East()
 	s := c.South()
 	w := c.West()
+	ne := c.NorthEast()
+	nw := c.NorthWest()
+	se := c.SouthEast()
+	sw := c.SouthWest()
 
-	label := plots[c.Y][c.X].Label
 	nSame := isSameField(plots, label, n)
 	eSame := isSameField(plots, label, e)
 	sSame := isSameField(plots, label, s)
 	wSame := isSameField(plots, label, w)
-	corners := countCorners(nSame, eSame, sSame, wSame)
+	neSame := isSameField(plots, label, ne)
+	nwSame := isSameField(plots, label, nw)
+	seSame := isSameField(plots, label, se)
+	swSame := isSameField(plots, label, sw)
+
+	// Haters gonna hate
+	corners := countCorners(nSame, eSame, sSame, wSame, neSame, nwSame, seSame, swSame)
 
 	if nSame {
 		a, p, c := countField(plots, n, visited)
@@ -171,19 +181,35 @@ func countCorners(
 	eSame bool,
 	sSame bool,
 	wSame bool,
+	neSame bool,
+	nwSame bool,
+	seSame bool,
+	swSame bool,
 ) int {
 	sum := 0
 	if !nSame && !eSame {
 		sum++
+	} else if nSame && eSame && !neSame {
+		sum++
 	}
+
 	if !nSame && !wSame {
 		sum++
+	} else if nSame && wSame && !nwSame {
+		sum++
 	}
+
 	if !sSame && !eSame {
 		sum++
-	}
-	if !sSame && !wSame {
+	} else if sSame && eSame && !seSame {
 		sum++
 	}
+
+	if !sSame && !wSame {
+		sum++
+	} else if sSame && wSame && !swSame {
+		sum++
+	}
+
 	return sum
 }
