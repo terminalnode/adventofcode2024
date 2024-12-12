@@ -30,6 +30,36 @@ func TestCoordinateDirections(t *testing.T) {
 	}
 }
 
+func TestCoordinate_String(t *testing.T) {
+	tests := []struct {
+		c        Coordinate
+		expected string
+	}{
+		{c: Coordinate{X: 123, Y: 456}, expected: "(123,456)"},
+		{c: Coordinate{X: -1741, Y: 917}, expected: "(-1741,917)"},
+		{c: Coordinate{X: 184701, Y: -10471}, expected: "(184701,-10471)"},
+	}
+
+	for _, test := range tests {
+		name := fmt.Sprintf("Coordinate{X:%d, Y:%d}.String()", test.c.X, test.c.Y)
+		actual := test.c.String()
+
+		t.Run(name, func(t *testing.T) {
+			if test.expected != actual {
+				t.Errorf("expected %v but got %v", test.expected, actual)
+			}
+		})
+
+		name = fmt.Sprintf("Formatted print with %%s of Coordinate{X:%d, Y:%d}", test.c.X, test.c.Y)
+		actual = fmt.Sprintf("%s", test.c)
+		t.Run(name, func(t *testing.T) {
+			if test.expected != test.c.String() {
+				t.Errorf("expected %v but got %v", test.expected, actual)
+			}
+		})
+	}
+}
+
 func TestIn2DArray(t *testing.T) {
 	matrix := [][]int{{0, 0}, {0, 0}}
 	tests := []struct {

@@ -1,5 +1,7 @@
 package util
 
+import "fmt"
+
 type Coordinate struct {
 	X int
 	Y int
@@ -47,4 +49,8 @@ func (c Coordinate) SouthWest() Coordinate {
 
 func (c Coordinate) SouthEast() Coordinate {
 	return Coordinate{c.X + 1, c.Y + 1}
+}
+
+func (c Coordinate) String() string {
+	return fmt.Sprintf("(%d,%d)", c.X, c.Y)
 }
