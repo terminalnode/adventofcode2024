@@ -16,13 +16,13 @@ func CreateHttpServer(
 ) *http.Server {
 	prefix := os.Getenv("AOC2024_PREFIX")
 
-	server := &http.Server{Addr: ":8080", Handler: nil}
+	server := &http.Server{Addr: ":3000", Handler: nil}
 	addHealthCheckHandlers(prefix)
 	addSolutionHandlers(prefix, day, part1, part2)
 	addUnknownPathHandlers()
 
 	go func() {
-		log.Printf("Starting Day #%d service on port 8080", day)
+		log.Printf("Starting Day #%d service on port 3000", day)
 		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Fatalf("Fatal server error: %v", err)
 		}
