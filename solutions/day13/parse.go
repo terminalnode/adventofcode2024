@@ -20,6 +20,7 @@ var r = regexp.MustCompile(`Button A: X\+(\d+), Y\+(\d+)\nButton B: X\+(\d+), Y\
 
 func parseProblems(
 	input string,
+	part2 bool,
 ) ([]problem, error) {
 	matches := r.FindAllSubmatch([]byte(input), -1)
 	problems := make([]problem, len(matches))
@@ -42,13 +43,20 @@ func parseProblems(
 			digits[j] = d
 		}
 
+		goalX := digits[4]
+		goalY := digits[5]
+		if part2 {
+			goalX += 10000000000000
+			goalY += 10000000000000
+		}
+
 		problems[i] = problem{
 			aX:    digits[0],
 			aY:    digits[1],
 			bX:    digits[2],
 			bY:    digits[3],
-			goalX: digits[4],
-			goalY: digits[5],
+			goalX: goalX,
+			goalY: goalY,
 		}
 	}
 
