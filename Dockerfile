@@ -16,6 +16,7 @@ ARG DAY
 COPY solutions/day${DAY} solutions/day${DAY}
 RUN go build -o app solutions/day${DAY}/main.go
 EXPOSE 3000
+EXPOSE 50051
 
 HEALTHCHECK \
     --start-interval=10s \

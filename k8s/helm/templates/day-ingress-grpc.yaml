@@ -6,12 +6,21 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: aoc2024-ingress
+  name: aoc2024-ingress-grpc
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
 spec:
   ingressClassName: nginx
+  tls:
+    - secretName: tls-certificate
+      hosts:
+        {{- range .Values.days}}
+        - "day{{ .day }}.grpc.{{ $.Values.hostname }}"
+        {{- end }}
   rules:
   {{- range .Values.days }}
-    - host: "day{{ .day }}.{{ $.Values.hostname }}"
+    - host: "day{{ .day }}.grpc.{{ $.Values.hostname }}"
       http:
         paths:
           - path: /
@@ -19,6 +28,6 @@ spec:
             backend:
               service:
                 name: aoc2024-day{{ .day }}
-                port: { name: http }
+                port: { number: 50051 }
   {{- end }}
 

@@ -14,9 +14,13 @@ spec:
     day: "{{ .day }}"
   ports:
     - protocol: TCP
-      port: {{ .servicePort | default 3000 }}
-      targetPort: {{ .containerPort | default 3000 }}
+      port: {{ .serviceHttpPort | default 3000 }}
+      targetPort: {{ .containerHttpPort | default 3000 }}
       name: http
+    - protocol: TCP
+      port: {{ .serviceGrpcPort | default 50051 }}
+      targetPort: {{ .containerGrpcPort | default 50051 }}
+      name: grpc
 
 ---
 {{- end }}

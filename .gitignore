@@ -12,3 +12,9 @@ build/*
 
 .idea
 client-env.sh
+
+k8s/helm/certs/*
+!k8s/helm/certs/aoc2024-http.crt
+!k8s/helm/certs/aoc2024-http.key
+!k8s/helm/certs/aoc2024-grpc.crt
+!k8s/helm/certs/aoc2024-grpc.key
