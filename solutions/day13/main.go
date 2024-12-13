@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
-	"github.com/terminalnode/adventofcode2024/common/util"
 	"log"
 	"math"
 )
@@ -20,7 +19,7 @@ func part1(
 		return fmt.Sprintf("Failed to parse input: %v", err)
 	}
 
-	sum := 0
+	sum := int64(0)
 	for _, p := range problems {
 		minTokenCost := findMinTokenCost(p)
 		if minTokenCost != -1 {
@@ -33,45 +32,42 @@ func part1(
 
 func findMinTokenCost(
 	p problem,
-) int {
-	smallest := math.MaxInt
+) int64 {
+	smallest := int64(math.MaxInt64)
 
-	for timesA := 0; true; timesA++ {
-		c := util.Coordinate{
-			X: timesA * p.a.X,
-			Y: timesA * p.a.Y,
-		}
-		if c.X > p.goal.X || c.Y > p.goal.Y {
+	for timesA := int64(0); true; timesA++ {
+		cX := timesA * p.aX
+		cY := timesA * p.aY
+		if cX > p.goalX || cY > p.goalY {
 			break
 		}
 
-		minMoves := findMinTokenCostAfterA(c, timesA, p)
+		minMoves := findMinTokenCostAfterA(cX, cY, timesA, p)
 		if minMoves != -1 && minMoves < smallest {
 			log.Printf("New smallest! %d", minMoves)
 			smallest = minMoves
 		}
 	}
 
-	if smallest == math.MaxInt {
+	if smallest == math.MaxInt64 {
 		return -1
 	}
 	return smallest
 }
 
 func findMinTokenCostAfterA(
-	c util.Coordinate,
-	timesA int,
+	cX int64,
+	cY int64,
+	timesA int64,
 	p problem,
-) int {
-	for timesB := 0; true; timesB++ {
-		newC := util.Coordinate{
-			X: timesB*p.b.X + c.X,
-			Y: timesB*p.b.Y + c.Y,
-		}
+) int64 {
+	for timesB := int64(0); true; timesB++ {
+		newX := timesB*p.bX + cX
+		newY := timesB*p.bY + cY
 
-		if newC.X > p.goal.X || newC.Y > p.goal.Y {
+		if newX > p.goalX || newY > p.goalY {
 			break
-		} else if newC.X == p.goal.X && newC.Y == p.goal.Y {
+		} else if newX == p.goalX && newY == p.goalY {
 			return timesA*3 + timesB
 		}
 	}

@@ -3,15 +3,17 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/terminalnode/adventofcode2024/common/util"
 	"regexp"
 	"strconv"
 )
 
 type problem struct {
-	a    util.Coordinate
-	b    util.Coordinate
-	goal util.Coordinate
+	aX    int64
+	aY    int64
+	bX    int64
+	bY    int64
+	goalX int64
+	goalY int64
 }
 
 var r = regexp.MustCompile(`Button A: X\+(\d+), Y\+(\d+)\nButton B: X\+(\d+), Y\+(\d+)\nPrize: X=(\d+), Y=(\d+)`)
@@ -31,19 +33,22 @@ func parseProblems(
 			return problems, fmt.Errorf("expected match to be at least 7 long, but was %d", len(match))
 		}
 
-		digits := make([]int, 6)
+		digits := make([]int64, 6)
 		for j := 0; j < 6; j++ {
-			d, err := strconv.ParseInt(string(match[j+1]), 10, 0)
+			d, err := strconv.ParseInt(string(match[j+1]), 10, 64)
 			if err != nil {
 				return problems, err
 			}
-			digits[j] = int(d)
+			digits[j] = d
 		}
 
 		problems[i] = problem{
-			a:    util.Coordinate{X: digits[0], Y: digits[1]},
-			b:    util.Coordinate{X: digits[2], Y: digits[3]},
-			goal: util.Coordinate{X: digits[4], Y: digits[5]},
+			aX:    digits[0],
+			aY:    digits[1],
+			bX:    digits[2],
+			bY:    digits[3],
+			goalX: digits[4],
+			goalY: digits[5],
 		}
 	}
 
