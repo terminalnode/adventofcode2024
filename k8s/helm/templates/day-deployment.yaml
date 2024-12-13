@@ -31,7 +31,8 @@ spec:
           image: aoc2024-day{{ .day }}
           imagePullPolicy: Never
           ports:
-            - containerPort: {{ .containerPort | default 3000 }}
+            - containerPort: {{ .containerHttpPort | default 3000 }}
+            - containerPort: {{ .containerGrpcPort | default 50051 }}
 
 ---
 {{- end }}
