@@ -14,7 +14,7 @@ COPY common common
 
 ARG DAY
 COPY solutions/day${DAY} solutions/day${DAY}
-RUN go build -o app solutions/day${DAY}/main.go
+RUN go build -o app solutions/day${DAY}/*
 EXPOSE 3000
 
 HEALTHCHECK \
