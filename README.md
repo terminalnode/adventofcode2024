@@ -41,11 +41,11 @@ automatically rebuilt and redeployed ever time the `common` module or their own
 
 ## Progress
 * ⭐ means solved
-* 🥸 means solved, but takes over a minute to run
+* 🥸 means solved, but takes over a minute to run, or requires some manual tinkering
 
 | Day | Solution | Day | Solution |
 |-----|----------|-----|----------|
-| 01  | ⭐ ⭐      | 14  | ⭐        |
+| 01  | ⭐ ⭐      | 14  | ⭐ 🥸     |
 | 02  | ⭐ ⭐      | 15  |          |
 | 03  | ⭐ ⭐      | 16  |          |
 | 04  | ⭐ ⭐      | 17  |          |
