@@ -1,11 +1,13 @@
 services:
   traefik:
     image: traefik:v3
-    ports: [ "80:80", "8000:8080" ]
+    ports: [ "80:80", "8000:8080", "50051:50051" ]
     command:
       - "--providers.docker"
       - "--api.insecure=true"
       - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.grpc.address=:50051"
+      - "--entrypoints.grpc.http.tls=true"
     volumes: [ "/var/run/docker.sock:/var/run/docker.sock:ro" ]
 
   day01:
@@ -18,6 +20,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day01.rule=PathPrefix(`/day01`)"
       - "traefik.http.services.day01.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day01grpc.tls=true"
+      - "traefik.tcp.routers.day01grpc.rule=HostSNI(`day01.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day01grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day01grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day01/ }
@@ -33,6 +39,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day02.rule=PathPrefix(`/day02`)"
       - "traefik.http.services.day02.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day02grpc.tls=true"
+      - "traefik.tcp.routers.day02grpc.rule=HostSNI(`day02.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day02grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day02grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day01/ }
@@ -48,6 +58,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day03.rule=PathPrefix(`/day03`)"
       - "traefik.http.services.day03.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day03grpc.tls=true"
+      - "traefik.tcp.routers.day03grpc.rule=HostSNI(`day03.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day03grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day03grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day03/ }
@@ -63,6 +77,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day04.rule=PathPrefix(`/day04`)"
       - "traefik.http.services.day04.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day04grpc.tls=true"
+      - "traefik.tcp.routers.day04grpc.rule=HostSNI(`day04.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day04grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day04grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day04/ }
@@ -78,6 +96,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day05.rule=PathPrefix(`/day05`)"
       - "traefik.http.services.day05.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day05grpc.tls=true"
+      - "traefik.tcp.routers.day05grpc.rule=HostSNI(`day05.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day05grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day05grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day05/ }
@@ -93,6 +115,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day06.rule=PathPrefix(`/day06`)"
       - "traefik.http.services.day06.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day06grpc.tls=true"
+      - "traefik.tcp.routers.day06grpc.rule=HostSNI(`day06.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day06grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day06grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day06/ }
@@ -108,6 +134,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day07.rule=PathPrefix(`/day07`)"
       - "traefik.http.services.day07.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day07grpc.tls=true"
+      - "traefik.tcp.routers.day07grpc.rule=HostSNI(`day07.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day07grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day07grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day07/ }
@@ -123,6 +153,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day08.rule=PathPrefix(`/day08`)"
       - "traefik.http.services.day08.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day08grpc.tls=true"
+      - "traefik.tcp.routers.day08grpc.rule=HostSNI(`day08.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day08grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day08grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day08/ }
@@ -138,6 +172,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day09.rule=PathPrefix(`/day09`)"
       - "traefik.http.services.day09.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day09grpc.tls=true"
+      - "traefik.tcp.routers.day09grpc.rule=HostSNI(`day09.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day09grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day09grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day09/ }
@@ -153,6 +191,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day10.rule=PathPrefix(`/day10`)"
       - "traefik.http.services.day10.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day10grpc.tls=true"
+      - "traefik.tcp.routers.day10grpc.rule=HostSNI(`day10.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day10grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day10grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day10/ }
@@ -168,6 +210,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day11.rule=PathPrefix(`/day11`)"
       - "traefik.http.services.day11.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day11grpc.tls=true"
+      - "traefik.tcp.routers.day11grpc.rule=HostSNI(`day11.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day11grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day11grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day11/ }
@@ -183,6 +229,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day12.rule=PathPrefix(`/day12`)"
       - "traefik.http.services.day12.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day12grpc.tls=true"
+      - "traefik.tcp.routers.day12grpc.rule=HostSNI(`day12.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day12grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day12grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day12/ }
@@ -198,6 +248,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day13.rule=PathPrefix(`/day13`)"
       - "traefik.http.services.day13.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day13grpc.tls=true"
+      - "traefik.tcp.routers.day13grpc.rule=HostSNI(`day13.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day13grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day13grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day13/ }
@@ -213,6 +267,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day14.rule=PathPrefix(`/day14`)"
       - "traefik.http.services.day14.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day14grpc.tls=true"
+      - "traefik.tcp.routers.day14grpc.rule=HostSNI(`day14.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day14grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day14grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day14/ }
@@ -228,6 +286,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day15.rule=PathPrefix(`/day15`)"
       - "traefik.http.services.day15.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day15grpc.tls=true"
+      - "traefik.tcp.routers.day15grpc.rule=HostSNI(`day15.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day15grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day15grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day15/ }
@@ -243,6 +305,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day16.rule=PathPrefix(`/day16`)"
       - "traefik.http.services.day16.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day16grpc.tls=true"
+      - "traefik.tcp.routers.day16grpc.rule=HostSNI(`day16.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day16grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day16grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day16/ }
@@ -258,6 +324,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day17.rule=PathPrefix(`/day17`)"
       - "traefik.http.services.day17.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day17grpc.tls=true"
+      - "traefik.tcp.routers.day17grpc.rule=HostSNI(`day17.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day17grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day17grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day17/ }
@@ -273,6 +343,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day18.rule=PathPrefix(`/day18`)"
       - "traefik.http.services.day18.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day18grpc.tls=true"
+      - "traefik.tcp.routers.day18grpc.rule=HostSNI(`day18.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day18grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day18grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day18/ }
@@ -288,6 +362,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day19.rule=PathPrefix(`/day19`)"
       - "traefik.http.services.day19.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day19grpc.tls=true"
+      - "traefik.tcp.routers.day19grpc.rule=HostSNI(`day19.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day19grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day19grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day19/ }
@@ -303,6 +381,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day20.rule=PathPrefix(`/day20`)"
       - "traefik.http.services.day20.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day20grpc.tls=true"
+      - "traefik.tcp.routers.day20grpc.rule=HostSNI(`day20.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day20grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day20grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day20/ }
@@ -318,6 +400,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day21.rule=PathPrefix(`/day21`)"
       - "traefik.http.services.day21.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day21grpc.tls=true"
+      - "traefik.tcp.routers.day21grpc.rule=HostSNI(`day21.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day21grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day21grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day21/ }
@@ -333,6 +419,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day22.rule=PathPrefix(`/day22`)"
       - "traefik.http.services.day22.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day22grpc.tls=true"
+      - "traefik.tcp.routers.day22grpc.rule=HostSNI(`day22.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day22grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day22grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day22/ }
@@ -348,6 +438,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day23.rule=PathPrefix(`/day23`)"
       - "traefik.http.services.day23.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day23grpc.tls=true"
+      - "traefik.tcp.routers.day23grpc.rule=HostSNI(`day23.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day23grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day23grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day23/ }
@@ -363,6 +457,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day24.rule=PathPrefix(`/day24`)"
       - "traefik.http.services.day24.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day24grpc.tls=true"
+      - "traefik.tcp.routers.day24grpc.rule=HostSNI(`day24.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day24grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day24grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day24/ }
@@ -378,6 +476,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.day25.rule=PathPrefix(`/day25`)"
       - "traefik.http.services.day25.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.day25grpc.tls=true"
+      - "traefik.tcp.routers.day25grpc.rule=HostSNI(`day25.grpc.aoc2024.se`)"
+      - "traefik.tcp.routers.day25grpc.entrypoints=grpc"
+      - "traefik.tcp.services.day25grpc.loadbalancer.server.port=50051"
     develop:
       watch:
         - { action: rebuild, path: solutions/day25/ }
