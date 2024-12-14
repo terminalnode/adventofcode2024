@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
 	"github.com/terminalnode/adventofcode2024/common/util"
-	"log"
+	"regexp"
 )
 
 const maxX = 100
@@ -53,12 +53,38 @@ func part2(
 		return fmt.Sprintf("Failed to parse robots: %v", err)
 	}
 
-	// It's not going to be be very early, so lets save some time by skipping 5k
-	for i := 5000; i < 15_000; i++ {
-		printPositions(i, getNewPositions(robots, i))
+	// The image we're looking for has a frame, and all non-image parts seem highly irregular.
+	// So the assumption is that this shouldn't appear outside the sought frame.
+	// The original image was found by saving logs to a file and searching for hashes too, just less specific.
+	r := regexp.MustCompile(`.###############################.`)
+
+	// We could very reasonably skip ~5000 steps it seems, as all answers on the sub is 5k+,
+	// but this already runs in less than 20 seconds so no reason to cheat.
+	found := false
+	var step int
+	for step = 1; step < 15_000; step++ {
+		np := getNewPositions(robots, step)
+		m := make([][]byte, maxY+1)
+		for y := range m {
+			m[y] = bytes.Repeat([]byte{'.'}, maxX+1)
+		}
+		for _, p := range np {
+			m[p.Y][p.X] = '#'
+		}
+
+		for _, row := range m {
+			if r.Match(row) {
+				found = true
+				break
+			}
+		}
+
+		if found {
+			break
+		}
 	}
 
-	return "kubectl logs -l day=14 -f | tee -a log.txt, then grep for a bunch of # :-)"
+	return fmt.Sprintf("Answer is probably %d", step)
 }
 
 func getNewPositions(
@@ -71,24 +97,4 @@ func getNewPositions(
 		out[i] = r.init.Add(move.X, move.Y).PositiveModulo(maxX+1, maxY+1)
 	}
 	return out
-}
-
-func printPositions(
-	steps int,
-	positions []util.Coordinate,
-) {
-	m := make([][]byte, maxY+1)
-	for y := range m {
-		m[y] = bytes.Repeat([]byte{'.'}, maxX+1)
-	}
-
-	for _, p := range positions {
-		m[p.Y][p.X] = '#'
-	}
-
-	log.Println("Matrix after step ", steps)
-	for _, r := range m {
-		log.Println(string(r))
-	}
-	log.Println("------------------")
 }
