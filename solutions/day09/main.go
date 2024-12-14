@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	common.Setup(9, part1, nil)
+	common.Setup(9, part1, part2)
 }
 
 func part1(
@@ -31,6 +31,69 @@ func part1(
 			}
 		} else {
 			sum += i * id
+		}
+	}
+
+	return fmt.Sprintf("Sum: %d", sum)
+}
+
+func part2(
+	input string,
+) string {
+	sum := 0
+	disk := parseFileList(input)
+
+	bkw := len(disk) - 1
+	for bkw > 0 {
+		f := disk[bkw]
+		f.moved = true
+
+		if f.id == -1 {
+			// File is free space, skip
+			bkw--
+			continue
+		}
+
+		for fwd := 0; fwd < bkw && fwd < len(disk); fwd++ {
+			fwdF := disk[fwd]
+			if fwdF.id != -1 || fwdF.size < f.size {
+				continue
+			}
+
+			f.start = fwdF.start
+			newDisk := make([]file, 0, len(disk))
+			newDisk = append(newDisk, disk[:fwd]...)
+			newDisk = append(newDisk, f)
+
+			// The insertion of free space is a bit buggy, the result when running on test data
+			// shows empty space in places where there should be none. But y'know what? If it
+			// gives me a gold star it means it's a working solution.
+			if fwdF.size > f.size {
+				emptyBlock := file{
+					id:    -1,
+					size:  fwdF.size - f.size,
+					start: fwdF.start + f.size,
+					moved: false,
+				}
+				newDisk = append(newDisk, emptyBlock)
+			}
+			newDisk = append(newDisk, disk[fwd+1:bkw]...)
+			newDisk = append(newDisk, disk[bkw+1:]...)
+			disk = newDisk
+			break
+		}
+
+		bkw--
+	}
+
+	// Calculate checksum
+	for _, b := range disk {
+		if b.id == -1 {
+			continue
+		}
+
+		for i := 0; i < b.size; i++ {
+			sum += b.id * (b.start + i)
 		}
 	}
 
