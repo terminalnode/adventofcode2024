@@ -1,13 +1,13 @@
-FROM golang:1.23-alpine AS deps
-COPY go.mod go.sum ./
-RUN go mod download
-
 FROM golang:1.23-alpine AS golang-with-curl
 RUN apk --no-cache add curl
 
-FROM golang-with-curl
+FROM golang-with-curl AS deps
 WORKDIR /app
-COPY --from=deps /go/pkg/mod /go/pkg/mod
+COPY go.mod go.sum ./
+RUN go mod download
+
+FROM deps AS build
+WORKDIR /app
 COPY go.mod .
 COPY go.sum .
 COPY common common
@@ -15,8 +15,13 @@ COPY common common
 ARG DAY
 COPY solutions/day${DAY} solutions/day${DAY}
 RUN go build -o app ./solutions/day${DAY}
-EXPOSE 3000
 
+FROM golang-with-curl
+WORKDIR /app
+COPY --from=build /app/app .
+
+EXPOSE 3000
+EXPOSE 50051
 HEALTHCHECK \
     --start-interval=10s \
     --interval=10s \
