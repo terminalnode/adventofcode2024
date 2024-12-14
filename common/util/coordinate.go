@@ -19,6 +19,34 @@ func In2DArray[T any](
 	return !invalid
 }
 
+func (c Coordinate) Add(x int, y int) Coordinate {
+	return Coordinate{X: c.X + x, Y: c.Y + y}
+}
+
+func (c Coordinate) Multiply(x int, y int) Coordinate {
+	return Coordinate{X: c.X * x, Y: c.Y * y}
+}
+
+func (c Coordinate) Modulo(x int, y int) Coordinate {
+	return Coordinate{X: c.X % x, Y: c.Y % y}
+}
+
+func (c Coordinate) PositiveModulo(x int, y int) Coordinate {
+	// This is similar to how modulo works in Python
+	// See: https://stackoverflow.com/questions/13794171/how-to-make-the-mod-of-a-negative-number-to-be-positive/13794192
+
+	if x < 0 {
+		x = -x
+	}
+	if y < 0 {
+		y = -y
+	}
+	return Coordinate{
+		X: ((c.X % x) + x) % x,
+		Y: ((c.Y % y) + y) % y,
+	}
+}
+
 func (c Coordinate) North() Coordinate {
 	return Coordinate{c.X, c.Y - 1}
 }
