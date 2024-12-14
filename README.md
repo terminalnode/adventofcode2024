@@ -1,6 +1,6 @@
 # Advent of Code 2024
-![gofmt](https://github.com/terminalnode/adventofcode2024/workflows/gofmt/badge.svg)
-![go test](https://github.com/terminalnode/adventofcode2024/workflows/go%20test/badge.svg)
+![gofmt](https://github.com/terminalnode/adventofcode2024/actions/workflows/gofmt.yml/badge.svg?branch=main)
+![go test](https://github.com/terminalnode/adventofcode2024/actions/workflows/gotest.yml/badge.svg?branch=main)
 
 This year's advent of code is being solved in Go as a series of microservices
 running in a Kubernetes cluster (or `docker-compose` if you prefer). The Kubernetes
