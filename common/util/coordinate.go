@@ -31,6 +31,10 @@ func (c Coordinate) Modulo(x int, y int) Coordinate {
 	return Coordinate{X: c.X % x, Y: c.Y % y}
 }
 
+func (c Coordinate) Equals(c2 Coordinate) bool {
+	return c.X == c2.X && c.Y == c2.Y
+}
+
 func (c Coordinate) PositiveModulo(x int, y int) Coordinate {
 	// This is similar to how modulo works in Python
 	// See: https://stackoverflow.com/questions/13794171/how-to-make-the-mod-of-a-negative-number-to-be-positive/13794192

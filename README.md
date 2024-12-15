@@ -46,7 +46,7 @@ automatically rebuilt and redeployed ever time the `common` module or their own
 | Day | Solution | Day | Solution |
 |-----|----------|-----|----------|
 | 01  | ⭐ ⭐      | 14  | ⭐ ⭐      |
-| 02  | ⭐ ⭐      | 15  |          |
+| 02  | ⭐ ⭐      | 15  | ⭐        |
 | 03  | ⭐ ⭐      | 16  |          |
 | 04  | ⭐ ⭐      | 17  |          |
 | 05  | ⭐ ⭐      | 18  |          |
