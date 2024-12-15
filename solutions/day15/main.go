@@ -1,58 +1,118 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
 	"github.com/terminalnode/adventofcode2024/common/util"
 )
 
-func main() {
-	common.Setup(15, part1, nil)
-}
+func main()                     { common.Setup(15, part1, part2) }
+func part1(input string) string { return solve(input, false) }
+func part2(input string) string { return solve(input, true) }
 
-func part1(
+type visitedSet = map[int]map[int]bool
+
+func solve(
 	input string,
+	makeWide bool,
 ) string {
-	p, err := parse(input, false)
+	p, err := parse(input, makeWide)
 	if err != nil {
 		return fmt.Sprintf("Failed to parse input: %v", err)
 	}
 
 	for _, move := range p.moves {
-		endPosition, err := findEndPosition(p.warehouse, p.robot, move)
+		newPos := move(p.robot)
+		boxMoves, err := getBoxMoves(p.warehouse, newPos, move, make(visitedSet))
 		if err != nil {
 			continue
 		}
 
-		newRobot := move(p.robot)
-		if !newRobot.Equals(endPosition) {
-			// End position is more than one step, meaning we need to move boxes
-			p.warehouse[newRobot.Y][newRobot.X] = Ground
-			p.warehouse[endPosition.Y][endPosition.X] = Box
+		// Zero out all moves
+		for _, bm := range boxMoves {
+			c := bm.curr
+			p.warehouse[c.Y][c.X] = Ground
 		}
-		p.robot = newRobot
+
+		// Put all boxes in their new positions
+		for _, bm := range boxMoves {
+			c := bm.new
+			p.warehouse[c.Y][c.X] = bm.ch
+		}
+
+		p.robot = newPos
 	}
 
+	if makeWide {
+		return fmt.Sprintf("Sum of all GPS coordinates in the wide area: %d", score(p.warehouse))
+	}
 	return fmt.Sprintf("Sum of all GPS coordinates: %d", score(p.warehouse))
 }
 
-func findEndPosition(
+type boxMove struct {
+	ch   int32
+	curr util.Coordinate
+	new  util.Coordinate
+}
+
+func getBoxMoves(
 	w warehouseMatrix,
-	s util.Coordinate,
+	start util.Coordinate,
 	d util.Direction,
-) (util.Coordinate, error) {
-	np := d(s)
-	ch := w[np.Y][np.X]
-	switch ch {
-	case Ground:
-		return np, nil
-	case Box:
-		return findEndPosition(w, np, d)
-	case Wall:
-		return np, fmt.Errorf("wall hit")
+	set visitedSet,
+) ([]boxMove, error) {
+	if inVisitedSet(set, start) {
+		return []boxMove{}, nil
+	}
+	set[start.X][start.Y] = true
+
+	// Initializations, boxMoves capacity is just a guess
+	boxMoves := make([]boxMove, 0, 200)
+	ch := w[start.Y][start.X]
+
+	// Early returns on ground and wall
+	if ch == Ground {
+		return boxMoves, nil
+	} else if ch == Wall {
+		return boxMoves, errors.New("wall hit")
 	}
 
-	panic(fmt.Sprintf("Invalid character: %c", ch))
+	// Whatever happens, add this move to the list
+	newPos := d(start)
+	boxMoves = append(boxMoves, boxMove{ch: ch, curr: start, new: newPos})
+
+	// Get next moves and add to the list
+	next, err := getBoxMoves(w, newPos, d, set)
+	if err != nil {
+		return boxMoves, err
+	}
+	boxMoves = append(boxMoves, next...)
+
+	// Now do the same thing for the partner boxes, if any
+	if ch != Box {
+		if ch == LeftBox {
+			next, err = getBoxMoves(w, start.East(), d, set)
+		} else if ch == RightBox {
+			next, err = getBoxMoves(w, start.West(), d, set)
+		}
+		if err != nil {
+			return boxMoves, err
+		}
+		boxMoves = append(boxMoves, next...)
+	}
+
+	return boxMoves, err
+}
+
+func inVisitedSet(
+	set visitedSet,
+	c util.Coordinate,
+) bool {
+	if set[c.X] == nil {
+		set[c.X] = make(map[int]bool)
+	}
+	return set[c.X][c.Y]
 }
 
 func score(
@@ -61,7 +121,7 @@ func score(
 	sum := 0
 	for y, row := range wh {
 		for x, ch := range row {
-			if ch != Box {
+			if ch != Box && ch != LeftBox {
 				continue
 			}
 			sum += x + 100*y
