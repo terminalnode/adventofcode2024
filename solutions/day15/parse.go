@@ -17,21 +17,24 @@ type problem struct {
 }
 
 const (
-	WALL   = '#'
-	BOX    = 'O'
-	ROBOT  = '@'
-	GROUND = '.'
+	Wall     = '#'
+	Box      = 'O'
+	Robot    = '@'
+	Ground   = '.'
+	LeftBox  = '['
+	RightBox = ']'
 )
 
 func parse(
 	input string,
+	makeWide bool,
 ) (problem, error) {
 	whRaw, mRaw, err := splitInput(input)
 	if err != nil {
 		return problem{}, err
 	}
 
-	wh, r, err := parseWarehouse(whRaw)
+	wh, r, err := parseWarehouse(whRaw, makeWide)
 
 	m, err := parseMoves(mRaw)
 	if err != nil {
@@ -57,6 +60,7 @@ func splitInput(
 
 func parseWarehouse(
 	wh string,
+	makeWide bool,
 ) (warehouseMatrix, util.Coordinate, error) {
 	lines := strings.Split(wh, "\n")
 	out := make(warehouseMatrix, len(lines))
@@ -64,19 +68,43 @@ func parseWarehouse(
 	foundRobot := false
 
 	for y, line := range lines {
-		out[y] = []int32(line)
-		for x, ch := range line {
-			if ch != WALL && ch != ROBOT && ch != BOX && ch != GROUND {
-				return out, robot, fmt.Errorf("invalid character in warehouse matrix: %c", ch)
-			}
-
-			if ch != ROBOT {
-				continue
-			}
-			foundRobot = true
-			robot = util.Coordinate{X: x, Y: y}
-			out[y][x] = GROUND
+		var row []int32
+		if makeWide {
+			row = make([]int32, 0, len(line)*2)
+		} else {
+			row = make([]int32, 0, len(line))
 		}
+
+		for x, ch := range line {
+			switch ch {
+			case Wall:
+				if makeWide {
+					row = append(row, Wall)
+				}
+				row = append(row, Wall)
+			case Box:
+				if makeWide {
+					row = append(row, LeftBox, RightBox)
+				} else {
+					row = append(row, Box)
+				}
+			case Ground:
+				if makeWide {
+					row = append(row, Ground)
+				}
+				row = append(row, Ground)
+			case Robot:
+				foundRobot = true
+				if makeWide {
+					row = append(row, Ground, Ground)
+					robot = util.Coordinate{X: 2 * x, Y: y}
+				} else {
+					row = append(row, Ground)
+					robot = util.Coordinate{X: x, Y: y}
+				}
+			}
+		}
+		out[y] = row
 	}
 
 	if !foundRobot {
@@ -96,27 +124,18 @@ func parseMoves(
 			continue
 		}
 
-		newMove, err := charToDirection(ch)
-		if err != nil {
-			return ms, err
+		switch ch {
+		case '^':
+			ms = append(ms, util.Coordinate.North)
+		case 'v':
+			ms = append(ms, util.Coordinate.South)
+		case '>':
+			ms = append(ms, util.Coordinate.East)
+		case '<':
+			ms = append(ms, util.Coordinate.West)
+		default:
+			return ms, fmt.Errorf("invalid direction '%c'", ch)
 		}
-		ms = append(ms, newMove)
 	}
 	return ms, nil
-}
-
-func charToDirection(
-	ch int32,
-) (util.Direction, error) {
-	switch ch {
-	case '^':
-		return util.Coordinate.North, nil
-	case 'v':
-		return util.Coordinate.South, nil
-	case '>':
-		return util.Coordinate.East, nil
-	case '<':
-		return util.Coordinate.West, nil
-	}
-	return nil, fmt.Errorf("invalid direction '%c'", ch)
 }

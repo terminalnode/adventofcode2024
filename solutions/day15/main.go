@@ -13,7 +13,7 @@ func main() {
 func part1(
 	input string,
 ) string {
-	p, err := parse(input)
+	p, err := parse(input, false)
 	if err != nil {
 		return fmt.Sprintf("Failed to parse input: %v", err)
 	}
@@ -27,8 +27,8 @@ func part1(
 		newRobot := move(p.robot)
 		if !newRobot.Equals(endPosition) {
 			// End position is more than one step, meaning we need to move boxes
-			p.warehouse[newRobot.Y][newRobot.X] = GROUND
-			p.warehouse[endPosition.Y][endPosition.X] = BOX
+			p.warehouse[newRobot.Y][newRobot.X] = Ground
+			p.warehouse[endPosition.Y][endPosition.X] = Box
 		}
 		p.robot = newRobot
 	}
@@ -44,11 +44,11 @@ func findEndPosition(
 	np := d(s)
 	ch := w[np.Y][np.X]
 	switch ch {
-	case GROUND:
+	case Ground:
 		return np, nil
-	case BOX:
+	case Box:
 		return findEndPosition(w, np, d)
-	case WALL:
+	case Wall:
 		return np, fmt.Errorf("wall hit")
 	}
 
@@ -61,7 +61,7 @@ func score(
 	sum := 0
 	for y, row := range wh {
 		for x, ch := range row {
-			if ch != BOX {
+			if ch != Box {
 				continue
 			}
 			sum += x + 100*y
