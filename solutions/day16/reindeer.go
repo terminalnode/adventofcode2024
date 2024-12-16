@@ -10,6 +10,7 @@ type intY = int
 type intDirection = int
 type intScore = int
 type visitedSet = map[intY]map[intX]intScore
+type winningSet = map[intY]map[intX]bool
 
 const (
 	North = iota
@@ -78,12 +79,19 @@ func (r reindeer) turnCounterClockwise() reindeer {
 
 func (r reindeer) visitAndCheckIfDead(
 	set visitedSet,
+	leeway bool,
 ) bool {
 	v := set[r.p.Y][r.p.X]
 	if v == 0 || r.score < v {
 		set[r.p.Y][r.p.X] = r.score
 		return false
 	}
+
+	// This leeway allows to find "temporarily suboptimal paths" when doing part 2
+	if leeway && r.score < (v+2000) {
+		return false
+	}
+
 	return true
 }
 
