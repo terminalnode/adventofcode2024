@@ -19,6 +19,10 @@ func In2DArray[T any](
 	return !invalid
 }
 
+func (c Coordinate) IsOrigin() bool {
+	return c.X == 0 && c.Y == 0
+}
+
 func (c Coordinate) Add(x int, y int) Coordinate {
 	return Coordinate{X: c.X + x, Y: c.Y + y}
 }

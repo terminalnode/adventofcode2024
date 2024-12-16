@@ -36,7 +36,7 @@ deployments).
 ### Running with `docker-compose`
 Just run `docker-compose up` and it will run all services as well as the `traefik`
 gateway. If the watch feature of `docker-compose` is enabled, the services will be
-automatically rebuilt and redeployed ever time the `common` module or their own
+automatically rebuilt and redeployed every time the `common` module or their own
 `solutions/dayX` module is updated.
 
 ## Progress
@@ -47,7 +47,7 @@ automatically rebuilt and redeployed ever time the `common` module or their own
 |-----|----------|-----|----------|
 | 01  | ⭐ ⭐      | 14  | ⭐ ⭐      |
 | 02  | ⭐ ⭐      | 15  | ⭐ ⭐      |
-| 03  | ⭐ ⭐      | 16  |          |
+| 03  | ⭐ ⭐      | 16  | ⭐        |
 | 04  | ⭐ ⭐      | 17  |          |
 | 05  | ⭐ ⭐      | 18  |          |
 | 06  | ⭐ ⭐      | 19  |          |
