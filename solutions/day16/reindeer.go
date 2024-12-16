@@ -9,7 +9,7 @@ type intX = int
 type intY = int
 type intDirection = int
 type intScore = int
-type visitedSet = map[intY]map[intX]map[intDirection]intScore
+type visitedSet = map[intY]map[intX]intScore
 
 const (
 	North = iota
@@ -79,9 +79,9 @@ func (r reindeer) turnCounterClockwise() reindeer {
 func (r reindeer) visitAndCheckIfDead(
 	set visitedSet,
 ) bool {
-	v := set[r.p.Y][r.p.X][r.direction]
+	v := set[r.p.Y][r.p.X]
 	if v == 0 || r.score < v {
-		set[r.p.Y][r.p.X][r.direction] = r.score
+		set[r.p.Y][r.p.X] = r.score
 		return false
 	}
 	return true

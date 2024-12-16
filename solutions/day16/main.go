@@ -43,11 +43,24 @@ func loop(
 		return
 	}
 
-	loop(r.turnClockwise(), i, set)
-	loop(r.turnCounterClockwise(), i, set)
-	fwd, err := r.forward(i.m)
+	newR, err := r.forward(i.m)
 	if err == nil {
-		loop(fwd, i, set)
+		loop(newR, i, set)
+	}
+
+	newR, err = r.turnClockwise().forward(i.m)
+	if err == nil {
+		loop(newR, i, set)
+	}
+
+	newR, err = r.turnClockwise().turnClockwise().forward(i.m)
+	if err == nil {
+		loop(newR, i, set)
+	}
+
+	newR, err = r.turnCounterClockwise().forward(i.m)
+	if err == nil {
+		loop(newR, i, set)
 	}
 
 	return
@@ -57,13 +70,7 @@ func lowestSoFar(
 	i parsedInput,
 	set visitedSet,
 ) int {
-	lowest := 0
-	for _, n := range set[i.e.Y][i.e.X] {
-		if lowest == 0 || n < lowest {
-			lowest = n
-		}
-	}
-	return lowest
+	return set[i.e.Y][i.e.X]
 }
 
 func initializeVisitedSet(
@@ -71,13 +78,9 @@ func initializeVisitedSet(
 ) visitedSet {
 	set := make(visitedSet)
 	for y, line := range i.m {
-		set[y] = make(map[intX]map[intDirection]intScore)
+		set[y] = make(map[intX]intScore)
 		for x, _ := range line {
-			set[y][x] = make(map[intDirection]intScore)
-			set[y][x][North] = math.MaxInt
-			set[y][x][South] = math.MaxInt
-			set[y][x][West] = math.MaxInt
-			set[y][x][East] = math.MaxInt
+			set[y][x] = math.MaxInt
 		}
 	}
 	return set
