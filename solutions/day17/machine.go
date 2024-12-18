@@ -6,19 +6,17 @@ import (
 )
 
 type machine struct {
-	a     int64
-	b     int64
-	c     int64
-	seq   []int64
-	out   []int64
-	pos   int
-	count int
+	a   int64
+	b   int64
+	c   int64
+	seq []int64
+	out []int64
+	pos int
 }
 
-func (m *machine) run(maxItt int) {
-	for m.pos < len(m.seq) && (maxItt <= 0 || m.count < maxItt) {
+func (m *machine) run(maxOut int) {
+	for m.pos < len(m.seq) && (maxOut < 1 || len(m.out) < maxOut) {
 		m.next()
-		m.count++
 	}
 }
 

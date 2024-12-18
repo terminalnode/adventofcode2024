@@ -4,13 +4,6 @@ import (
 	"testing"
 )
 
-const ex1Out = "4,6,3,5,6,3,5,2,1,0"
-const ex1 = `Register A: 729
-Register B: 0
-Register C: 0
-
-Program: 0,1,5,4,3,0`
-
 func TestParseMachine(t *testing.T) {
 	testInput := `Register A: -1337
 Register B: 0
@@ -49,9 +42,30 @@ Program: 0,-1,5,-4,3,0`
 	}
 }
 
-func TestPart1_Example1(t *testing.T) {
-	out := part1(ex1)
-	if out != ex1Out {
-		t.Errorf("expected '%s' but got '%s'", ex1Out, out)
+func TestPart1_Example(t *testing.T) {
+	const ex = `Register A: 729
+Register B: 0
+Register C: 0
+
+Program: 0,1,5,4,3,0`
+	const exOut = "4,6,3,5,6,3,5,2,1,0"
+
+	out := part1(ex)
+	if out != exOut {
+		t.Errorf("expected '%s' but got '%s'", exOut, out)
+	}
+}
+
+func TestPart2_Example(t *testing.T) {
+	ex := `Register A: 2024
+Register B: 0
+Register C: 0
+
+Program: 0,3,5,4,3,0`
+	exOut := "Registry A should be 117440"
+
+	out := part2(ex)
+	if out != exOut {
+		t.Errorf("expected '%s' but got '%s'", exOut, out)
 	}
 }
