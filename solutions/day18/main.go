@@ -7,68 +7,77 @@ import (
 )
 
 func main() {
-	common.Setup(18, part1, nil)
+	common.Setup(18, part1, part2)
 }
 
 func part1(
 	input string,
 ) string {
-	out, err := run(input, 70, 70, 1024)
-	if err != nil {
-		return err.Error()
-	}
-	return fmt.Sprintf("Shortest path is %d steps", out)
-}
-
-func run(
-	input string,
-	maxX int,
-	maxY int,
-	fallenBytes int,
-) (int, error) {
-	m := buildMatrix(maxX, maxY)
+	m := buildMatrix()
 	cs, err := parse(input)
 	if err != nil {
-		return -1, err
+		return fmt.Sprintf("Failed to parse input: %v", err)
 	}
 
-	if len(cs) > fallenBytes {
-		cs = cs[:fallenBytes]
-	}
-
-	for _, c := range cs {
+	for _, c := range cs[:1024] {
 		m[c.Y][c.X] = true
 	}
 
-	visitedSet := buildVisitedSet(maxY)
-	shortestPath(
-		m,
-		util.Coordinate{X: 0, Y: 0},
-		util.Coordinate{X: maxX, Y: maxY},
-		0,
-		visitedSet,
-	)
+	start := util.Coordinate{X: 0, Y: 0}
+	end := util.Coordinate{X: 70, Y: 70}
+	visitedSet := buildVisitedSet[int]()
+	shortestPath(m, start, end, 0, visitedSet)
 
-	return visitedSet[maxY][maxX], nil
+	shortest := visitedSet[70][70]
+	return fmt.Sprintf("Shortest path is %d steps", shortest)
 }
 
-func buildMatrix(
-	maxX int,
-	maxY int,
-) [][]bool {
-	out := make([][]bool, maxY+1)
-	for y := 0; y <= maxY; y++ {
-		out[y] = make([]bool, maxX+1)
+func part2(
+	input string,
+) string {
+	m := buildMatrix()
+	cs, err := parse(input)
+	if err != nil {
+		return fmt.Sprintf("Failed to parse input: %v", err)
+	}
+
+	// Initialize everything
+	latest := cs[0]
+	cs = cs[1:]
+	winningSet := buildVisitedSet[bool]()
+	m[latest.Y][latest.X] = true
+	count := 1
+	start := util.Coordinate{X: 0, Y: 0}
+	end := util.Coordinate{X: 70, Y: 70}
+	success := anyPath(m, start, end, buildVisitedSet[bool](), winningSet)
+
+	for success && len(cs) > 0 {
+		for !winningSet[latest.Y][latest.X] && len(cs) > 0 {
+			count++
+			latest = cs[0]
+			cs = cs[1:]
+			m[latest.Y][latest.X] = true
+		}
+
+		winningSet = buildVisitedSet[bool]()
+		success = anyPath(m, start, end, buildVisitedSet[bool](), winningSet)
+	}
+
+	return fmt.Sprintf("The byte that broke the camel's back was %s", latest)
+}
+
+func buildMatrix() [][]bool {
+	out := make([][]bool, 71)
+	for y := 0; y <= 70; y++ {
+		out[y] = make([]bool, 71)
 	}
 	return out
 }
 
-func buildVisitedSet(
-	maxY int,
-) map[int]map[int]int {
-	visitedSet := make(map[int]map[int]int)
-	for y := 0; y <= maxY; y++ {
-		visitedSet[y] = make(map[int]int)
+func buildVisitedSet[T any]() map[int]map[int]T {
+	visitedSet := make(map[int]map[int]T)
+	for y := 0; y <= 70; y++ {
+		visitedSet[y] = make(map[int]T)
 	}
 	return visitedSet
 }
@@ -105,4 +114,32 @@ func shortestPath(
 	shortestPath(m, c.East(), goal, steps+1, visitedSet)
 	shortestPath(m, c.South(), goal, steps+1, visitedSet)
 	shortestPath(m, c.West(), goal, steps+1, visitedSet)
+}
+
+func anyPath(
+	m [][]bool,
+	c util.Coordinate,
+	goal util.Coordinate,
+	visitedSet map[int]map[int]bool,
+	winningSet map[int]map[int]bool,
+) bool {
+	if visitedSet[c.Y][c.X] || !util.In2DArray(c, m) || m[c.Y][c.X] {
+		// Been here, outside matrix or position is impassable
+		return false
+	} else if c.Equals(goal) {
+		// We did it!
+		winningSet[c.Y][c.X] = true
+		return true
+	}
+
+	visitedSet[c.Y][c.X] = true
+	winner := anyPath(m, c.South(), goal, visitedSet, winningSet) ||
+		anyPath(m, c.East(), goal, visitedSet, winningSet) ||
+		anyPath(m, c.West(), goal, visitedSet, winningSet) ||
+		anyPath(m, c.North(), goal, visitedSet, winningSet)
+	if winner {
+		winningSet[c.Y][c.X] = true
+	}
+
+	return winner
 }
