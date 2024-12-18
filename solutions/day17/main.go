@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
+	"strconv"
+	"strings"
 )
 
 func main() {
@@ -28,38 +30,61 @@ func part2(
 		return fmt.Sprintf("Failed to parse machine: %v", err)
 	}
 
-	lenSeq := len(m.seq)
-	initA := int64(0)
+	maxIdx := len(m.seq) - 1
+	octArr := make([]int, len(m.seq))
+	octIdx := 0
 	initB := m.b
 	initC := m.c
-	for initA = 0; true; initA++ {
-		m.run(lenSeq)
-		if compareSeqOut(m, lenSeq) {
-			break
-		}
-		m.a = initA
+
+	for {
+		seqIdx := maxIdx - octIdx
+
+		// Rig the machine
+		octArr[octIdx] += 1
 		m.b = initB
 		m.c = initC
 		m.out = m.out[:0]
-		m.pos = 0
-	}
 
-	return fmt.Sprintf("Registry A should be %d", initA-1)
-}
+		m.a, err = arrayToOct(octArr)
+		if err != nil {
+			return fmt.Sprintf("Failed to read %v as octal string: %v", octArr, err)
+		}
 
-func compareSeqOut(
-	m machine,
-	lenSeq int,
-) bool {
-	if len(m.out) != lenSeq {
-		return false
-	}
+		// Run the program and verify output
+		m.run(maxIdx + 1)
+		correct := m.out[seqIdx] == m.seq[seqIdx]
 
-	for i, seq := range m.seq {
-		if m.out[i] != seq {
-			return false
+		if octIdx == maxIdx && correct {
+			break
+		} else if correct {
+			octIdx++
+			octArr[octIdx] = -1
+		}
+
+		for octArr[octIdx] == 7 {
+			octArr[octIdx] = 0
+			octIdx--
 		}
 	}
 
-	return true
+	final, err := arrayToOct(octArr)
+	if err != nil {
+		return fmt.Sprintf("Solved it, but failed to extract number: %v", err)
+	}
+	return fmt.Sprintf("Registry A should be %d", final)
+}
+
+func arrayToOct(
+	arr []int,
+) (int64, error) {
+	strArr := make([]string, len(arr))
+	for i, n := range arr {
+		strArr[i] = strconv.Itoa(n)
+	}
+
+	oct, err := strconv.ParseInt(strings.Join(strArr, ""), 8, 64)
+	if err != nil {
+		return 0, err
+	}
+	return oct, nil
 }
