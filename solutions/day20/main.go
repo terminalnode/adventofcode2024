@@ -26,22 +26,8 @@ func part1(
 
 	cheatCounts := make(map[int]int)
 	for _, pos := range path {
-		distance := dm[pos.Y][pos.X]
-		next := []util.Coordinate{
-			pos.North().North(),
-			pos.South().South(),
-			pos.East().East(),
-			pos.West().West(),
-		}
-
-		for _, nPos := range next {
-			// Normally moving two steps should give us two less distance,
-			// so these 2 are subtracted from the saved amount.
-			nDistance := dm[nPos.Y][nPos.X]
-			saved := nDistance - distance - 2
-			if saved > 0 {
-				cheatCounts[saved] += 1
-			}
+		for k, v := range findAllCheats(dm, pos, 2) {
+			cheatCounts[k] += v
 		}
 	}
 
@@ -50,10 +36,56 @@ func part1(
 		if k >= 100 {
 			count += v
 		}
-		fmt.Printf("There are %d cheats that save %d picoseconds.\n", v, k)
 	}
 
 	return fmt.Sprintf("Number of cheats saving at least 100ps: %d", count)
+}
+
+func findAllCheats(
+	dm distanceMap,
+	pos util.Coordinate,
+	steps int,
+) map[int]int {
+	// Initialize visited set
+	visited := make(map[intY]map[intX]bool)
+	for y := range dm {
+		visited[y] = make(map[intX]bool)
+	}
+
+	cheats := make(map[int]int)
+	positions := pos.Adjacent4()
+	distance := dm[pos.Y][pos.X]
+	for step := 1; step <= steps; step++ {
+		newPositions := make([]util.Coordinate, 0, 4*len(positions))
+		for _, p := range positions {
+			// 1. Check if in visited set, if it is then skip.
+			if visited[p.Y][p.X] || visited[p.Y] == nil {
+				continue
+			}
+			visited[p.Y][p.X] = true
+
+			// 2. Calculate time saved
+			// Moving here normally will take $step number of steps, so savings
+			// are calculated by subtracting step from the distance map.
+			nDistance := dm[p.Y][p.X]
+			saved := nDistance - distance - step
+
+			if nDistance != 0 && saved <= 0 {
+				// 3. If we didn't save time by going this way, continue.
+				continue
+			} else if nDistance != 0 {
+				// 4. We didn't save time by going here, but we're still in the wilderness
+				cheats[saved] += 1
+			}
+
+			// 5. This position is not trash, lets add all it's neighbors to the new positions set
+			newPositions = append(newPositions, p.Adjacent4()...)
+		}
+
+		positions = newPositions
+	}
+
+	return cheats
 }
 
 func (p parsedInput) createDistanceMap() (distanceMap, []util.Coordinate, error) {
