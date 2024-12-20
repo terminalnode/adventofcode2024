@@ -52,7 +52,7 @@ automatically rebuilt and redeployed every time the `common` module or their own
 | 04  | ⭐ ⭐      | 17  | ⭐ ⭐      |
 | 05  | ⭐ ⭐      | 18  | ⭐ ⭐      |
 | 06  | ⭐ ⭐      | 19  | ⭐ ⭐      |
-| 07  | ⭐ ⭐      | 20  |          |
+| 07  | ⭐ ⭐      | 20  | ⭐        |
 | 08  | ⭐ ⭐      | 21  |          |
 | 09  | ⭐ ⭐      | 22  |          |
 | 10  | ⭐ ⭐      | 23  |          |

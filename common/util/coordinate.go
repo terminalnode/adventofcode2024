@@ -55,6 +55,23 @@ func (c Coordinate) PositiveModulo(x int, y int) Coordinate {
 	}
 }
 
+func (c Coordinate) Adjacent4() []Coordinate {
+	return []Coordinate{c.North(), c.East(), c.South(), c.West()}
+}
+
+func (c Coordinate) Adjacent8() []Coordinate {
+	return []Coordinate{
+		c.North(),
+		c.NorthEast(),
+		c.NorthWest(),
+		c.South(),
+		c.SouthEast(),
+		c.SouthWest(),
+		c.East(),
+		c.West(),
+	}
+}
+
 func (c Coordinate) North() Coordinate {
 	return Coordinate{c.X, c.Y - 1}
 }
