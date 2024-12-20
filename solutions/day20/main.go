@@ -8,11 +8,16 @@ import (
 )
 
 func main() {
-	common.Setup(20, part1, nil)
+	common.Setup(20, part1, part2)
 }
 
-func part1(
+func part1(input string) string { return solve(input, 2, 100) }
+func part2(input string) string { return solve(input, 20, 100) }
+
+func solve(
 	input string,
+	steps int,
+	limit int,
 ) string {
 	p, err := parse(input)
 	if err != nil {
@@ -26,24 +31,25 @@ func part1(
 
 	cheatCounts := make(map[int]int)
 	for _, pos := range path {
-		for k, v := range findAllCheats(dm, pos, 2) {
+		for k, v := range findAllCheats(dm, pos, p.e, steps) {
 			cheatCounts[k] += v
 		}
 	}
 
 	count := 0
 	for k, v := range cheatCounts {
-		if k >= 100 {
+		if k >= limit {
 			count += v
 		}
 	}
 
-	return fmt.Sprintf("Number of cheats saving at least 100ps: %d", count)
+	return fmt.Sprintf("Number of cheats saving at least %d ps: %d", limit, count)
 }
 
 func findAllCheats(
 	dm distanceMap,
 	pos util.Coordinate,
+	ePos util.Coordinate,
 	steps int,
 ) map[int]int {
 	// Initialize visited set
@@ -53,36 +59,23 @@ func findAllCheats(
 	}
 
 	cheats := make(map[int]int)
-	positions := pos.Adjacent4()
 	distance := dm[pos.Y][pos.X]
-	for step := 1; step <= steps; step++ {
-		newPositions := make([]util.Coordinate, 0, 4*len(positions))
-		for _, p := range positions {
-			// 1. Check if in visited set, if it is then skip.
-			if visited[p.Y][p.X] || visited[p.Y] == nil {
-				continue
+	for step := 2; step <= steps; step++ {
+		for y := -step; y <= step; y++ {
+			remainingSteps := step - util.AbsInt(y)
+			for x := -remainingSteps; x <= remainingSteps; x++ {
+				if util.AbsInt(x)+util.AbsInt(y) != step {
+					continue
+				}
+				nPos := util.Coordinate{X: pos.X + x, Y: pos.Y + y}
+
+				nDistance := dm[nPos.Y][nPos.X]
+				saved := distance - nDistance - step
+				if (nDistance != 0 || nPos.Equals(ePos)) && saved > 0 {
+					cheats[saved] += 1
+				}
 			}
-			visited[p.Y][p.X] = true
-
-			// 2. Calculate time saved
-			// Moving here normally will take $step number of steps, so savings
-			// are calculated by subtracting step from the distance map.
-			nDistance := dm[p.Y][p.X]
-			saved := nDistance - distance - step
-
-			if nDistance != 0 && saved <= 0 {
-				// 3. If we didn't save time by going this way, continue.
-				continue
-			} else if nDistance != 0 {
-				// 4. We didn't save time by going here, but we're still in the wilderness
-				cheats[saved] += 1
-			}
-
-			// 5. This position is not trash, lets add all it's neighbors to the new positions set
-			newPositions = append(newPositions, p.Adjacent4()...)
 		}
-
-		positions = newPositions
 	}
 
 	return cheats
