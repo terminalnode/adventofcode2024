@@ -40,9 +40,28 @@ func part1(
 func part2(
 	input string,
 ) string {
+	cliques, err := getCliques(input)
+	if err != nil {
+		return fmt.Sprintf("Failed to get cliques: %v", err)
+	}
+
+	var biggest []string
+	for _, c := range cliques {
+		if len(c) > len(biggest) {
+			biggest = c
+		}
+	}
+	slices.Sort(biggest)
+
+	return fmt.Sprintf("Password: %s", strings.Join(biggest, ","))
+}
+
+func getCliques(
+	input string,
+) ([][]string, error) {
 	graph, intToName, err := parseGonumGraph(input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse input: %v", err)
+		return [][]string{}, err
 	}
 
 	nodes := graph.Nodes()
@@ -52,20 +71,18 @@ func part2(
 	}
 
 	cliques := bronKerbosch([]int64{}, p, graph)
-
-	var biggest []int64
-	for _, c := range cliques {
-		if len(c) > len(biggest) {
-			biggest = c
+	out := make([][]string, len(cliques))
+	for i, clique := range cliques {
+		strClique := make([]string, len(clique))
+		for j, node := range clique {
+			if name, ok := intToName[node]; ok {
+				strClique[j] = name
+			} else {
+				return out, fmt.Errorf("could not find name for node %d", node)
+			}
 		}
+		out[i] = strClique
 	}
 
-	names := make([]string, len(biggest))
-	for i, n := range biggest {
-		names[i] = intToName[n]
-	}
-	slices.Sort(names)
-	name := strings.Join(names, ",")
-
-	return fmt.Sprintf("Password: %s", name)
+	return out, nil
 }
