@@ -20,10 +20,50 @@ func part1(
 	if err != nil {
 		return fmt.Sprintf("Failed to parse input: %v", err)
 	}
-	zNames := findZIndexes(r, wm)
+	zNames := findIndexes('z', r, wm)
+	resolveNames(r, wm, zNames)
+	out, strOut, err := toInt(r, zNames)
+	if err != nil {
+		return fmt.Sprintf("Failed to read %s as binary: %v", strOut, err)
+	}
+
+	return fmt.Sprintf("Decimal output is %d (binary %s)", out, strOut)
+}
+
+func toInt(
+	r registry,
+	names []name,
+) (int, string, error) {
+	values := make([]string, len(names))
+	for i, n := range names {
+		if r[n] {
+			values[i] = "1"
+		} else {
+			values[i] = "0"
+		}
+	}
+
+	slices.Reverse(values)
+	outStr := strings.Join(values, "")
+	out64, err := strconv.ParseInt(outStr, 2, 0)
+	outInt := int(out64)
+	if err != nil {
+		return outInt, outStr, fmt.Errorf("failed to read %s as binary: %v", outStr, err)
+	}
+
+	return outInt, outStr, nil
+}
+
+func resolveNames(
+	r registry,
+	wm wireMap,
+	nameSets ...[]name,
+) {
 	depSet := make(map[name]bool)
-	for _, zName := range zNames {
-		depSet[zName] = true
+	for _, nameSet := range nameSets {
+		for _, n := range nameSet {
+			depSet[n] = true
+		}
 	}
 
 	for len(depSet) > 0 {
@@ -40,23 +80,6 @@ func part1(
 		}
 		depSet = newDepSet
 	}
-
-	zValues := make([]string, len(zNames))
-	for i, zName := range zNames {
-		if r[zName] {
-			zValues[i] = "1"
-		} else {
-			zValues[i] = "0"
-		}
-	}
-	slices.Reverse(zValues)
-	zString := strings.Join(zValues, "")
-	out, err := strconv.ParseInt(zString, 2, 0)
-	if err != nil {
-		return fmt.Sprintf("Failed to read %s as binary: %v", zString, err)
-	}
-
-	return fmt.Sprintf("Decimal output is %d (binary %s)", out, zString)
 }
 
 func resolveDeps(
@@ -101,13 +124,14 @@ func (w wire) execute(
 	}
 }
 
-func findZIndexes(
+func findIndexes(
+	prefix rune,
 	r registry,
 	wm wireMap,
 ) []name {
 	out := make([]name, 0, 30)
 	for curr := 0; ; curr++ {
-		key := name(fmt.Sprintf("z%02d", curr))
+		key := name(fmt.Sprintf("%c%02d", prefix, curr))
 		_, inR := r[key]
 		_, inWM := wm[key]
 		if !inR && !inWM {
