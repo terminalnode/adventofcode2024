@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-type name string
+type name = string
 type registry = map[name]bool
 type wireMap = map[name]wire
 
@@ -74,7 +74,7 @@ func parseReg(
 		return "", false, fmt.Errorf("failed to parse registry %s with initial value %s", raw, split[1])
 	}
 
-	return name(split[0]), split[1] == "1", nil
+	return split[0], split[1] == "1", nil
 }
 
 func parseWire(
@@ -85,10 +85,10 @@ func parseWire(
 		return wire{}, fmt.Errorf("failed to split raw wire %s, got %d parts (%v)", raw, len(split), split)
 	}
 
-	p1 := name(split[0])
+	p1 := split[0]
 	rawOp := split[1]
-	p2 := name(split[2])
-	out := name(split[4])
+	p2 := split[2]
+	out := split[4]
 
 	var realOp op
 	switch rawOp {

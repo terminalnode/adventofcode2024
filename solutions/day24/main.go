@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
 	"log"
+	"math/bits"
 	"slices"
 	"strconv"
 	"strings"
 )
 
 func main() {
-	common.Setup(24, part1, nil)
+	common.Setup(24, part1, part2)
 }
 
 func part1(
@@ -28,6 +29,93 @@ func part1(
 	}
 
 	return fmt.Sprintf("Decimal output is %d (binary %s)", out, strOut)
+}
+
+func part2(
+	input string,
+) string {
+	r, wm, err := parse(input)
+	if err != nil {
+		return fmt.Sprintf("Failed to parse input: %v", err)
+	}
+
+	zWrong := make([]name, 0)
+	carryWrong := make([]name, 0)
+
+	// Rules deduced by people who know how a ripple adder works and who have figured out the structure of the
+	// input. Most people just plopped it into a graphing tool or solved it with pen and paper it seems.
+	// I hated every second of this problem with a passion.
+	for out, w := range wm {
+		if out[0] == 'z' && out != "z45" && w.op != XOR {
+			zWrong = append(zWrong, out)
+		}
+
+		inputsNotXY := out[0] != 'z' &&
+			w.p1[0] != 'x' && w.p1[0] != 'y' &&
+			w.p2[0] != 'x' && w.p2[0] != 'y'
+		if inputsNotXY && out[0] != 'z' && w.op == XOR {
+			carryWrong = append(carryWrong, out)
+		}
+	}
+
+	pairs := make([][2]name, 0, 3)
+	for _, carry := range carryWrong {
+		zOutput := findFirstZ(carry, wm)
+		zNum, _ := strconv.Atoi(string(zOutput[1:]))
+		pairs = append(pairs, [2]name{carry, name(fmt.Sprintf("z%02d", zNum-1))})
+	}
+
+	xNames := findIndexes('x', r, wm)
+	yNames := findIndexes('y', r, wm)
+	zNames := findIndexes('z', r, wm)
+	resolveNames(r, wm, zNames, yNames, xNames)
+
+	xOut, _, _ := toInt(r, xNames)
+	yOut, _, _ := toInt(r, yNames)
+	zOut, _, _ := toInt(r, zNames)
+
+	expected := xOut + yOut
+	wrongBits := zOut ^ expected
+	falseCarry := bits.TrailingZeros64(uint64(wrongBits))
+
+	lastPair := make([]name, 0, 2)
+	for out, w := range wm {
+		suffix := fmt.Sprintf("%02d", falseCarry)
+		if strings.HasSuffix(w.p1, suffix) &&
+			strings.HasSuffix(w.p2, suffix) {
+			lastPair = append(lastPair, out)
+		}
+	}
+
+	final := make([]name, 0, 6)
+	final = append(final, zWrong...)
+	final = append(final, carryWrong...)
+	final = append(final, lastPair...)
+	slices.Sort(final)
+
+	return strings.Join(final, ",")
+}
+
+func findFirstZ(
+	start name,
+	wm wireMap,
+) name {
+	visited := make(map[name]bool)
+	current := start
+
+	for {
+		if current[0] == 'z' {
+			return current
+		}
+		visited[current] = true
+
+		for _, w := range wm {
+			if (w.p1 == current || w.p2 == current) && !visited[w.out] {
+				current = w.out
+				break
+			}
+		}
+	}
 }
 
 func toInt(
@@ -66,11 +154,14 @@ func resolveNames(
 		}
 	}
 
-	for len(depSet) > 0 {
+	anyNew := true
+	for len(depSet) > 0 && anyNew {
+		anyNew = false
 		newDepSet := make(map[name]bool)
 		for dep := range depSet {
 			depDeps, w := resolveDeps(r, wm, dep)
 			for _, depDep := range depDeps {
+				anyNew = anyNew || !depSet[depDep]
 				newDepSet[depDep] = true
 			}
 
@@ -78,6 +169,8 @@ func resolveNames(
 				w.execute(r)
 			}
 		}
+
+		anyNew = anyNew || len(depSet) != len(newDepSet)
 		depSet = newDepSet
 	}
 }
