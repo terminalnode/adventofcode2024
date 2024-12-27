@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
+	"github.com/terminalnode/adventofcode2024/common/util"
 	"regexp"
 	"strconv"
 )
@@ -14,9 +15,9 @@ func main() {
 }
 
 func part1(
-	input string,
-) string {
-	finds := r.FindAllSubmatch([]byte(input), -1)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	finds := r.FindAllSubmatch([]byte(input.Input), -1)
 	sum := 0
 	for _, match := range finds {
 		verb := string(match[1])
@@ -26,17 +27,17 @@ func part1(
 
 		multiplied, err := mul(string(match[3]), string(match[4]))
 		if err != nil {
-			return fmt.Sprintf("Failed to parse multiplication of %q:\n%v\n", match, err)
+			return util.NewAocError(fmt.Sprintf("Failed to parse multiplication of %q:\n%v\n", match, err), util.ParsingError)
 		}
 		sum += multiplied
 	}
-	return fmt.Sprintf("Result: %d", sum)
+	return util.FormatAocSolution("Result: %d", sum)
 }
 
 func part2(
-	input string,
-) string {
-	finds := r.FindAllSubmatch([]byte(input), -1)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	finds := r.FindAllSubmatch([]byte(input.Input), -1)
 	sum := 0
 
 	enabled := true
@@ -47,7 +48,7 @@ func part2(
 			if enabled {
 				multiplied, err := mul(string(match[3]), string(match[4]))
 				if err != nil {
-					return fmt.Sprintf("Failed to parse multiplication of %q:\n%v\n", match, err)
+					return util.NewAocError(fmt.Sprintf("Failed to parse multiplication of %q:\n%v\n", match, err), util.ParsingError)
 				}
 				sum += multiplied
 			}
@@ -58,7 +59,7 @@ func part2(
 		}
 	}
 
-	return fmt.Sprintf("Result: %d", sum)
+	return util.FormatAocSolution("Result: %d", sum)
 }
 
 func mul(sub1 string, sub2 string) (int, error) {

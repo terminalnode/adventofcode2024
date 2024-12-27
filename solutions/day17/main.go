@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
+	"github.com/terminalnode/adventofcode2024/common/util"
 	"strconv"
 	"strings"
 )
@@ -12,22 +13,22 @@ func main() {
 }
 
 func part1(
-	input string,
-) string {
-	m, err := parseMachine(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	m, err := parseMachine(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse machine: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 	m.run(-1)
-	return m.strOut()
+	return util.NewAocSolution(m.strOut())
 }
 
 func part2(
-	input string,
-) string {
-	m, err := parseMachine(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	m, err := parseMachine(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse machine: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	maxIdx := len(m.seq) - 1
@@ -47,7 +48,8 @@ func part2(
 
 		m.a, err = arrayToOct(octArr)
 		if err != nil {
-			return fmt.Sprintf("Failed to read %v as octal string: %v", octArr, err)
+			msg := fmt.Sprintf("Solved it, but failed to extract number: %v", err)
+			return util.NewAocError(msg, util.ParsingError)
 		}
 
 		// Run the program and verify output
@@ -69,9 +71,10 @@ func part2(
 
 	final, err := arrayToOct(octArr)
 	if err != nil {
-		return fmt.Sprintf("Solved it, but failed to extract number: %v", err)
+		msg := fmt.Sprintf("Solved it, but failed to extract number: %v", err)
+		return util.NewAocError(msg, util.ParsingError)
 	}
-	return fmt.Sprintf("Registry A should be %d", final)
+	return util.FormatAocSolution("Registry A should be %d", final)
 }
 
 func arrayToOct(

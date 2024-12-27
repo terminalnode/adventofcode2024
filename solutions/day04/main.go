@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
 	"github.com/terminalnode/adventofcode2024/common/util"
 )
@@ -14,11 +13,11 @@ func main() {
 }
 
 func part1(
-	input string,
-) string {
-	m, err := util.NewCharMatrix(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	m, err := util.NewCharMatrix(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to build matrix: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	count := 0
@@ -40,15 +39,15 @@ func part1(
 		}
 	}
 
-	return fmt.Sprintf("Number of XMAS: %d", count)
+	return util.FormatAocSolution("Number of XMAS: %d", count)
 }
 
 func part2(
-	input string,
-) string {
-	m, err := util.NewCharMatrix(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	m, err := util.NewCharMatrix(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to build matrix: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 	count := 0
 	for x := 1; x < m.MaxX; x++ {
@@ -96,7 +95,7 @@ func part2(
 		}
 	}
 
-	return fmt.Sprintf("Number of X-shaped MAS: %d", count)
+	return util.FormatAocSolution("Number of X-shaped MAS: %d", count)
 }
 
 func searchXmas(

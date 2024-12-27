@@ -11,11 +11,11 @@ func main() {
 }
 
 func part1(
-	input string,
-) string {
-	m, err := util.NewCharMatrix(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	m, err := util.NewCharMatrix(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse input: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	coords := make(map[uint8][]util.Coordinate)
@@ -49,15 +49,15 @@ func part1(
 		}
 	}
 
-	return fmt.Sprintf("Unique anti nodes: %d", len(antiNodeSet))
+	return util.FormatAocSolution("Unique anti nodes: %d", len(antiNodeSet))
 }
 
 func part2(
-	input string,
-) string {
-	m, err := util.NewCharMatrix(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	m, err := util.NewCharMatrix(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse input: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	coords := make(map[uint8][]util.Coordinate)
@@ -106,7 +106,7 @@ func part2(
 		}
 	}
 
-	return fmt.Sprintf("Unique anti nodes (with resonance): %d", len(antiNodeSet))
+	return util.FormatAocSolution("Unique anti nodes (with resonance): %d", len(antiNodeSet))
 }
 
 func addCoordinateToSet(

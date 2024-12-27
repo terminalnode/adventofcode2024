@@ -12,9 +12,9 @@ func main() {
 }
 
 func part1(
-	input string,
-) string {
-	topo := parseTopographicMap(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	topo := parseTopographicMap(input.Input)
 
 	out := 0
 	for y := 0; y < len(topo); y++ {
@@ -31,13 +31,13 @@ func part1(
 		}
 	}
 
-	return fmt.Sprintf("Number of trails: %d", out)
+	return util.FormatAocSolution("Number of trails: %d", out)
 }
 
 func part2(
-	input string,
-) string {
-	topo := parseTopographicMap(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	topo := parseTopographicMap(input.Input)
 
 	out := 0
 	for y := 0; y < len(topo); y++ {
@@ -52,7 +52,7 @@ func part2(
 		}
 	}
 
-	return fmt.Sprintf("Number of distinct trails: %d", out)
+	return util.FormatAocSolution("Number of distinct trails: %d", out)
 }
 
 func parseTopographicMap(

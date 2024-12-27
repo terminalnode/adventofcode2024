@@ -1,6 +1,8 @@
 package web
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/terminalnode/adventofcode2024/common/util"
 	"net/http"
@@ -9,7 +11,7 @@ import (
 func createSolutionHandler(
 	day int,
 	part int,
-	solution func(string) string,
+	solution util.Solution,
 ) func(http.ResponseWriter, *http.Request) {
 	if solution == nil {
 		solution = defaultSolutionHandler(day, part)
@@ -27,10 +29,13 @@ func createSolutionHandler(
 			return
 		}
 
-		result := solution(input)
-		if _, err = w.Write([]byte(result)); err != nil {
-			http.Error(w, "Error", http.StatusInternalServerError)
-			return
+		aocSolution, aocErr := solution(input)
+		w.Header().Set("Content-Type", "application/json")
+		encoder := json.NewEncoder(w)
+		if errors.Is(err, util.AocError{}) {
+			encoder.Encode(aocErr)
+		} else {
+			encoder.Encode(aocSolution)
 		}
 	}
 }
@@ -39,7 +44,10 @@ func defaultSolutionHandler(
 	day int,
 	part int,
 ) util.Solution {
-	return func(input string) string {
-		return fmt.Sprintf("Solution for day %d part %d not implemented yet", day, part)
+	return func(input util.AocInput) (util.AocSolution, util.AocError) {
+		return util.NewAocError(
+			fmt.Sprintf("Solution for day %d part %d not implemented yet", day, part),
+			util.NotImplemented,
+		)
 	}
 }

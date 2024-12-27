@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
 	"github.com/terminalnode/adventofcode2024/common/util"
 	"regexp"
@@ -18,11 +17,11 @@ func main() {
 }
 
 func part1(
-	input string,
-) string {
-	robots, err := parseRobots(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	robots, err := parseRobots(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse robots: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	q1, q2, q3, q4 := 0, 0, 0, 0
@@ -42,15 +41,15 @@ func part1(
 		}
 	}
 
-	return fmt.Sprintf("After 100 seconds, area has a safety factor of %d", q1*q2*q3*q4)
+	return util.FormatAocSolution("After 100 seconds, area has a safety factor of %d", q1*q2*q3*q4)
 }
 
 func part2(
-	input string,
-) string {
-	robots, err := parseRobots(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	robots, err := parseRobots(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse robots: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	// The image we're looking for has a frame, and all non-image parts seem highly irregular.
@@ -84,7 +83,7 @@ func part2(
 		}
 	}
 
-	return fmt.Sprintf("Answer is probably %d", step)
+	return util.FormatAocSolution("Answer is probably %d", step)
 }
 
 func getNewPositions(

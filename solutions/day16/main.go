@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
+	"github.com/terminalnode/adventofcode2024/common/util"
 	"math"
 )
 
@@ -11,26 +11,26 @@ func main() {
 }
 
 func part1(
-	input string,
-) string {
-	i, err := parse(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	i, err := parse(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse input: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	// Initialize visited set with end point
 	set := initializeVisitedSet(i)
 	loop(initialReindeer(i.s), i, set, initializeWinningSet(i), -1)
 
-	return fmt.Sprintf("Cheapest path: %v", lowestSoFar(i, set))
+	return util.FormatAocSolution("Cheapest path: %v", lowestSoFar(i, set))
 }
 
 func part2(
-	input string,
-) string {
-	i, err := parse(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	i, err := parse(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse input: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	// Initialize visited set with end point
@@ -49,7 +49,7 @@ func part2(
 		count += len(ys)
 	}
 
-	return fmt.Sprintf("Best seats: %d", count)
+	return util.FormatAocSolution("Best seats: %d", count)
 }
 
 func loop(

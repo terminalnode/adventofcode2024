@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
+	"github.com/terminalnode/adventofcode2024/common/util"
 	"slices"
 	"strconv"
 	"strings"
@@ -40,10 +41,12 @@ func createLists(input string) ([]int, []int, error) {
 	return left, right, nil
 }
 
-func part1(input string) string {
-	left, right, err := createLists(input)
+func part1(
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	left, right, err := createLists(input.Input)
 	if err != nil {
-		return err.Error()
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	// Sort the lists
@@ -60,13 +63,15 @@ func part1(input string) string {
 		sum += diff
 	}
 
-	return fmt.Sprintf("Result for part 1: %d", sum)
+	return util.FormatAocSolution("Result for part 1: %d", sum)
 }
 
-func part2(input string) string {
-	left, right, err := createLists(input)
+func part2(
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	left, right, err := createLists(input.Input)
 	if err != nil {
-		return err.Error()
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	rightMap := make(map[int]int)
@@ -79,5 +84,5 @@ func part2(input string) string {
 		sum += l * rightMap[l]
 	}
 
-	return fmt.Sprintf("Result for part 2: %d", sum)
+	return util.FormatAocSolution("Result for part 2: %d", sum)
 }

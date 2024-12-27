@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
+	"github.com/terminalnode/adventofcode2024/common/util"
 	"regexp"
 	"strings"
 )
@@ -12,11 +13,11 @@ func main() {
 }
 
 func part1(
-	input string,
-) string {
-	p, err := parse(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	p, err := parse(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse input: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	join := strings.Join(p.available, "|")
@@ -29,15 +30,15 @@ func part1(
 		}
 	}
 
-	return fmt.Sprintf("%d of the %d desired designs are possible", count, len(p.desired))
+	return util.FormatAocSolution("%d of the %d desired designs are possible", count, len(p.desired))
 }
 
 func part2(
-	input string,
-) string {
-	p, err := parse(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	p, err := parse(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse input: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	cache := make(map[string]int)
@@ -47,7 +48,7 @@ func part2(
 		count += n
 	}
 
-	return fmt.Sprintf("Number of available combinations: %d", count)
+	return util.FormatAocSolution("Number of available combinations: %d", count)
 }
 
 func loop(

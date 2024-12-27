@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
+	"github.com/terminalnode/adventofcode2024/common/util"
 	"strconv"
 	"strings"
 )
@@ -10,22 +11,18 @@ import (
 // Stone => blinks remaining => output
 type blinkCache = map[int]map[int]int
 
-func main() {
-	common.Setup(11, part1, part2)
-}
-
-func part1(input string) string { return solve(input, 25) }
-
-func part2(input string) string { return solve(input, 75) }
+func main()                                                       { common.Setup(11, part1, part2) }
+func part1(input util.AocInput) (util.AocSolution, util.AocError) { return solve(input.Input, 25) }
+func part2(input util.AocInput) (util.AocSolution, util.AocError) { return solve(input.Input, 75) }
 
 func solve(
 	input string,
 	blinks int,
-) string {
+) (util.AocSolution, util.AocError) {
 	stones, err := parseStones(input)
 	cache := make(blinkCache)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse stones: %v", err)
+		return util.NewAocError(fmt.Sprintf("Failed to parse stones: %v", err), util.InputParsingError)
 	}
 	lenStart := len(stones)
 
@@ -33,14 +30,14 @@ func solve(
 	for i, stone := range stones {
 		result, err := blink(stone, blinks, cache)
 		if err != nil {
-			return fmt.Sprintf("Failed to blink stone #%d (%d): %v", i+1, stone, err)
+			return util.NewAocError(fmt.Sprintf("Failed to blink stone #%d (%d): %v", i+1, stone, err), util.ProcessingError)
 		}
 
 		out += result
 		fmt.Printf("Stone with value %d resulted in %d (out = %d)\n", stone, result, out)
 	}
 
-	return fmt.Sprintf("%d stones have turned into %d after %d blinks", lenStart, out, blinks)
+	return util.NewAocSolution(fmt.Sprintf("%d stones have turned into %d after %d blinks", lenStart, out, blinks))
 }
 
 func parseStones(

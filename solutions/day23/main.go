@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
+	"github.com/terminalnode/adventofcode2024/common/util"
 	"slices"
 	"strings"
 )
@@ -12,11 +13,11 @@ func main() {
 }
 
 func part1(
-	input string,
-) string {
-	cm, err := parse(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	cm, err := parse(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse input: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	visited := make(map[string]bool)
@@ -34,15 +35,16 @@ func part1(
 		}
 	}
 
-	return fmt.Sprintf("Clusters of 3 with computers starting with t: %d", len(visited))
+	return util.FormatAocSolution("Clusters of 3 with computers starting with t: %d", len(visited))
 }
 
 func part2(
-	input string,
-) string {
-	cliques, err := getCliques(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	cliques, err := getCliques(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to get cliques: %v", err)
+		msg := fmt.Sprintf("Failed to get cliques: %v", err)
+		return util.NewAocError(msg, util.InputParsingError)
 	}
 
 	var biggest []string
@@ -53,7 +55,7 @@ func part2(
 	}
 	slices.Sort(biggest)
 
-	return fmt.Sprintf("Password: %s", strings.Join(biggest, ","))
+	return util.FormatAocSolution("Password: %s", strings.Join(biggest, ","))
 }
 
 func getCliques(

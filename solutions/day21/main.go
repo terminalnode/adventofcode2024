@@ -3,27 +3,29 @@ package main
 import (
 	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
+	"github.com/terminalnode/adventofcode2024/common/util"
 	"strconv"
 	"strings"
 )
 
 func main() { common.Setup(21, part1, part2) }
 
-func part1(input string) string { return solve(input, 2) }
-func part2(input string) string { return solve(input, 25) }
+func part1(input util.AocInput) (util.AocSolution, util.AocError) { return solve(input, 2) }
+func part2(input util.AocInput) (util.AocSolution, util.AocError) { return solve(input, 25) }
 
 func solve(
-	input string,
+	input util.AocInput,
 	robots int,
-) string {
+) (util.AocSolution, util.AocError) {
 	cache := make(cacheMap)
 
-	sequences := strings.Split(input, "\n")
+	sequences := strings.Split(input.Input, "\n")
 	sum := 0
 	for _, code := range sequences {
 		codeNumeric, err := strconv.Atoi(code[:len(code)-1])
 		if err != nil {
-			return fmt.Sprintf("Failed to parse code %s as int: %v", code, err)
+			msg := fmt.Sprintf("Failed to parse code %s as int: %v", code, err)
+			return util.NewAocError(msg, util.StringToNumber)
 		}
 
 		// Five is the longest path between two keys on numeric pad
@@ -43,5 +45,5 @@ func solve(
 		sum += pathLen * codeNumeric
 	}
 
-	return fmt.Sprintf("Sum: %d", sum)
+	return util.FormatAocSolution("Sum: %d", sum)
 }

@@ -2,24 +2,23 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
 	"github.com/terminalnode/adventofcode2024/common/util"
 )
 
-func main()                     { common.Setup(15, part1, part2) }
-func part1(input string) string { return solve(input, false) }
-func part2(input string) string { return solve(input, true) }
+func main()                                                       { common.Setup(15, part1, part2) }
+func part1(input util.AocInput) (util.AocSolution, util.AocError) { return solve(input, false) }
+func part2(input util.AocInput) (util.AocSolution, util.AocError) { return solve(input, true) }
 
 type visitedSet = map[int]map[int]bool
 
 func solve(
-	input string,
+	input util.AocInput,
 	makeWide bool,
-) string {
-	p, err := parse(input, makeWide)
+) (util.AocSolution, util.AocError) {
+	p, err := parse(input.Input, makeWide)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse input: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	for _, move := range p.moves {
@@ -45,9 +44,9 @@ func solve(
 	}
 
 	if makeWide {
-		return fmt.Sprintf("Sum of all GPS coordinates in the wide area: %d", score(p.warehouse))
+		return util.FormatAocSolution("Sum of all GPS coordinates in the wide area: %d", score(p.warehouse))
 	}
-	return fmt.Sprintf("Sum of all GPS coordinates: %d", score(p.warehouse))
+	return util.FormatAocSolution("Sum of all GPS coordinates: %d", score(p.warehouse))
 }
 
 type boxMove struct {

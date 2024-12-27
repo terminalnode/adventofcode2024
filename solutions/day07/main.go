@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
+	"github.com/terminalnode/adventofcode2024/common/util"
 	"strconv"
 	"strings"
 )
@@ -17,11 +18,11 @@ func main() {
 }
 
 func part1(
-	input string,
-) string {
-	equations, err := parseEquations(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	equations, err := parseEquations(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse input: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	sum := 0
@@ -31,15 +32,15 @@ func part1(
 		}
 	}
 
-	return fmt.Sprintf("Sum of all OK tests: %d", sum)
+	return util.FormatAocSolution("Sum of all OK tests: %d", sum)
 }
 
 func part2(
-	input string,
-) string {
-	equations, err := parseEquations(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	equations, err := parseEquations(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse input: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	sum := 0
@@ -49,7 +50,7 @@ func part2(
 		}
 	}
 
-	return fmt.Sprintf("Sum of all OK tests: %d", sum)
+	return util.FormatAocSolution("Sum of all OK tests: %d", sum)
 }
 
 func parseEquations(

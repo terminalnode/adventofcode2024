@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
+	"github.com/terminalnode/adventofcode2024/common/util"
 	"log"
 	"math/bits"
 	"slices"
@@ -15,28 +16,29 @@ func main() {
 }
 
 func part1(
-	input string,
-) string {
-	r, wm, err := parse(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	r, wm, err := parse(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse input: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 	zNames := findIndexes('z', r, wm)
 	resolveNames(r, wm, zNames)
 	out, strOut, err := toInt(r, zNames)
 	if err != nil {
-		return fmt.Sprintf("Failed to read %s as binary: %v", strOut, err)
+		msg := fmt.Sprintf("Failed to read %s as binary: %v", strOut, err)
+		return util.NewAocError(msg, util.InputParsingError)
 	}
 
-	return fmt.Sprintf("Decimal output is %d (binary %s)", out, strOut)
+	return util.FormatAocSolution("Decimal output is %d (binary %s)", out, strOut)
 }
 
 func part2(
-	input string,
-) string {
-	r, wm, err := parse(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	r, wm, err := parse(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse input: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	zWrong := make([]name, 0)
@@ -61,8 +63,8 @@ func part2(
 	pairs := make([][2]name, 0, 3)
 	for _, carry := range carryWrong {
 		zOutput := findFirstZ(carry, wm)
-		zNum, _ := strconv.Atoi(string(zOutput[1:]))
-		pairs = append(pairs, [2]name{carry, name(fmt.Sprintf("z%02d", zNum-1))})
+		zNum, _ := strconv.Atoi(zOutput[1:])
+		pairs = append(pairs, [2]name{carry, fmt.Sprintf("z%02d", zNum-1)})
 	}
 
 	xNames := findIndexes('x', r, wm)
@@ -93,7 +95,7 @@ func part2(
 	final = append(final, lastPair...)
 	slices.Sort(final)
 
-	return strings.Join(final, ",")
+	return util.NewAocSolution(strings.Join(final, ","))
 }
 
 func findFirstZ(
@@ -224,7 +226,7 @@ func findIndexes(
 ) []name {
 	out := make([]name, 0, 30)
 	for curr := 0; ; curr++ {
-		key := name(fmt.Sprintf("%c%02d", prefix, curr))
+		key := fmt.Sprintf("%c%02d", prefix, curr)
 		_, inR := r[key]
 		_, inWM := wm[key]
 		if !inR && !inWM {

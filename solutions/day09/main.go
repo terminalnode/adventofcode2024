@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
+	"github.com/terminalnode/adventofcode2024/common/util"
 )
 
 func main() {
@@ -10,10 +10,10 @@ func main() {
 }
 
 func part1(
-	input string,
-) string {
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
 	sum := 0
-	disk := parse(input)
+	disk := parse(input.Input)
 	backIndex := len(disk)
 
 	for i, id := range disk {
@@ -34,14 +34,14 @@ func part1(
 		}
 	}
 
-	return fmt.Sprintf("Sum: %d", sum)
+	return util.FormatAocSolution("Sum: %d", sum)
 }
 
 func part2(
-	input string,
-) string {
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
 	sum := 0
-	disk := parseFileList(input)
+	disk := parseFileList(input.Input)
 
 	bkw := len(disk) - 1
 	for bkw > 0 {
@@ -97,5 +97,5 @@ func part2(
 		}
 	}
 
-	return fmt.Sprintf("Sum: %d", sum)
+	return util.FormatAocSolution("Sum: %d", sum)
 }

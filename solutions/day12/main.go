@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
 	"github.com/terminalnode/adventofcode2024/common/util"
 	"log"
@@ -19,11 +18,11 @@ func main() {
 }
 
 func part1(
-	input string,
-) string {
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
 	sum := 0
 	fields := 0
-	plots := parsePlots(input)
+	plots := parsePlots(input.Input)
 	visited := make(map[string]bool)
 
 	rows := len(plots)
@@ -42,15 +41,15 @@ func part1(
 		}
 	}
 
-	return fmt.Sprintf("Area * perimeter of %d fields: %d", fields, sum)
+	return util.FormatAocSolution("Area * perimeter of %d fields: %d", fields, sum)
 }
 
 func part2(
-	input string,
-) string {
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
 	sum := 0
 	fields := 0
-	plots := parsePlots(input)
+	plots := parsePlots(input.Input)
 	visited := make(map[string]bool)
 
 	rows := len(plots)
@@ -69,7 +68,7 @@ func part2(
 		}
 	}
 
-	return fmt.Sprintf("Area * sides of %d fields: %d", fields, sum)
+	return util.FormatAocSolution("Area * sides of %d fields: %d", fields, sum)
 }
 
 func parsePlots(

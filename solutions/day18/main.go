@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
 	"github.com/terminalnode/adventofcode2024/common/util"
 )
@@ -11,12 +10,12 @@ func main() {
 }
 
 func part1(
-	input string,
-) string {
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
 	m := buildMatrix()
-	cs, err := parse(input)
+	cs, err := parse(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse input: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	for _, c := range cs[:1024] {
@@ -29,16 +28,16 @@ func part1(
 	shortestPath(m, start, end, 0, visitedSet)
 
 	shortest := visitedSet[70][70]
-	return fmt.Sprintf("Shortest path is %d steps", shortest)
+	return util.FormatAocSolution("Shortest path is %d steps", shortest)
 }
 
 func part2(
-	input string,
-) string {
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
 	m := buildMatrix()
-	cs, err := parse(input)
+	cs, err := parse(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse input: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	// Initialize everything
@@ -63,7 +62,7 @@ func part2(
 		success = anyPath(m, start, end, buildVisitedSet[bool](), winningSet)
 	}
 
-	return fmt.Sprintf("The byte that broke the camel's back was %s", latest)
+	return util.FormatAocSolution("The byte that broke the camel's back was %s", latest)
 }
 
 func buildMatrix() [][]bool {

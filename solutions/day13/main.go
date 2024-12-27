@@ -1,21 +1,21 @@
 package main
 
 import (
-	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
+	"github.com/terminalnode/adventofcode2024/common/util"
 )
 
-func main()                     { common.Setup(13, part1, part2) }
-func part1(input string) string { return solve(input, false) }
-func part2(input string) string { return solve(input, true) }
+func main()                                                       { common.Setup(13, part1, part2) }
+func part1(input util.AocInput) (util.AocSolution, util.AocError) { return solve(input, false) }
+func part2(input util.AocInput) (util.AocSolution, util.AocError) { return solve(input, true) }
 
 func solve(
-	input string,
+	input util.AocInput,
 	part2 bool,
-) string {
-	problems, err := parseProblems(input, part2)
+) (util.AocSolution, util.AocError) {
+	problems, err := parseProblems(input.Input, part2)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse input: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	sum := int64(0)
@@ -32,5 +32,5 @@ func solve(
 		}
 	}
 
-	return fmt.Sprintf("Cost is %d tokens to solve these %d claw machines", sum, len(problems))
+	return util.FormatAocSolution("Cost is %d tokens to solve these %d claw machines", sum, len(problems))
 }

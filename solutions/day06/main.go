@@ -36,11 +36,11 @@ func main() {
 }
 
 func part1(
-	input string,
-) string {
-	parsed, err := parseInput(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	parsed, err := parseInput(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse input: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	for parsed.move() {
@@ -52,16 +52,16 @@ func part1(
 		count += len(xMap)
 	}
 
-	return fmt.Sprintf("Visited spots in the Matrix: %d", count)
+	return util.FormatAocSolution("Visited spots in the Matrix: %d", count)
 }
 
 func part2(
-	input string,
-) string {
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
 	// Solve part 1 first to know where to place obstacles
-	original, err := parseInput(input)
+	original, err := parseInput(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse input: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	originalX := original.Guard.X
@@ -101,7 +101,7 @@ func part2(
 		}
 	}
 
-	return fmt.Sprintf("%d of the available %d positions make him loopy!", count, attempts)
+	return util.FormatAocSolution("%d of the available %d positions make him loopy!", count, attempts)
 }
 
 func parseInput(

@@ -11,22 +11,23 @@ func main() {
 	common.Setup(20, part1, part2)
 }
 
-func part1(input string) string { return solve(input, 2, 100) }
-func part2(input string) string { return solve(input, 20, 100) }
+func part1(input util.AocInput) (util.AocSolution, util.AocError) { return solve(input, 2, 100) }
+func part2(input util.AocInput) (util.AocSolution, util.AocError) { return solve(input, 20, 100) }
 
 func solve(
-	input string,
+	input util.AocInput,
 	steps int,
 	limit int,
-) string {
-	p, err := parse(input)
+) (util.AocSolution, util.AocError) {
+	p, err := parse(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse input: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	dm, path, err := p.createDistanceMap()
 	if err != nil {
-		return fmt.Sprintf("Failed to create distance map: %v", err)
+		msg := fmt.Sprintf("Failed to create distance map: %v", err)
+		return util.NewAocError(msg, util.ProcessingError)
 	}
 
 	cheatCounts := make(map[int]int)
@@ -43,7 +44,7 @@ func solve(
 		}
 	}
 
-	return fmt.Sprintf("Number of cheats saving at least %d ps: %d", limit, count)
+	return util.FormatAocSolution("Number of cheats saving at least %d ps: %d", limit, count)
 }
 
 func findAllCheats(

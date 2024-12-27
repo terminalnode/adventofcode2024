@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/terminalnode/adventofcode2024/common/util"
 	"testing"
 )
 
@@ -50,8 +51,8 @@ Register C: 0
 Program: 0,1,5,4,3,0`
 	const exOut = "4,6,3,5,6,3,5,2,1,0"
 
-	out := part1(ex)
-	if out != exOut {
+	out, _ := part1(util.AocInput{Input: ex})
+	if out.Solution != exOut {
 		t.Errorf("expected '%s' but got '%s'", exOut, out)
 	}
 }
@@ -64,8 +65,8 @@ Register C: 0
 Program: 0,3,5,4,3,0`
 	exOut := "Registry A should be 117440"
 
-	out := part2(ex)
-	if out != exOut {
+	out, _ := part2(util.AocInput{Input: ex})
+	if out.Solution != exOut {
 		t.Errorf("expected '%s' but got '%s'", exOut, out)
 	}
 }

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
+	"github.com/terminalnode/adventofcode2024/common/util"
 	"strconv"
 	"strings"
 )
@@ -119,23 +119,23 @@ func countSafe(
 }
 
 func part1(
-	input string,
-) string {
-	reports, err := parseAllReports(input, false)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	reports, err := parseAllReports(input.Input, false)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse reports: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
-	return fmt.Sprintf("Number of safe reports: %d", countSafe(reports))
+	return util.FormatAocSolution("Number of safe reports: %d", countSafe(reports))
 }
 
 func part2(
-	input string,
-) string {
-	reports, err := parseAllReports(input, true)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	reports, err := parseAllReports(input.Input, true)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse reports: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
-	return fmt.Sprintf("Number of safe reports: %d", countSafe(reports))
+	return util.FormatAocSolution("Number of safe reports: %d", countSafe(reports))
 }

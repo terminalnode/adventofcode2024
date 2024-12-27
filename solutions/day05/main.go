@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
+	"github.com/terminalnode/adventofcode2024/common/util"
 	"strconv"
 	"strings"
 )
@@ -21,11 +22,11 @@ func main() {
 }
 
 func part1(
-	input string,
-) string {
-	parsed, err := parseInput(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	parsed, err := parseInput(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse input: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	sum := 0
@@ -34,15 +35,15 @@ func part1(
 		sum += manual[len(manual)/2]
 	}
 
-	return fmt.Sprintf("Sum of middle numbers: %d", sum)
+	return util.FormatAocSolution("Sum of middle numbers: %d", sum)
 }
 
 func part2(
-	input string,
-) string {
-	parsed, err := parseInput(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	parsed, err := parseInput(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse input: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	sum := 0
@@ -51,12 +52,12 @@ func part2(
 		stopAt := len(manual) / 2
 		corrected, err := correctManual(parsed.rules, manual, PageList{}, stopAt)
 		if err != nil {
-			return fmt.Sprintf("Failed to correct manual %v:\n%v", manual, err)
+			return util.NewAocError(fmt.Sprintf("Failed to correct manual %v:\n%v", manual, err), util.ProcessingError)
 		}
 		sum += corrected[stopAt]
 	}
 
-	return fmt.Sprintf("Sum of middle numbers (corrected manuals): %d", sum)
+	return util.FormatAocSolution("Sum of middle numbers (corrected manuals): %d", sum)
 }
 
 func divideCorrectManuals(

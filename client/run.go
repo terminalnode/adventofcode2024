@@ -2,8 +2,10 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/terminalnode/adventofcode2024/common/util"
 	"io"
 	"net/http"
 	"os"
@@ -64,17 +66,23 @@ func runSolution(
 	url string,
 	day int,
 	part int,
-	input string,
+	rawInput string,
 ) (string, error) {
 	url = fmt.Sprintf("http://%s/day%02d/%d", url, day, part)
 	fmt.Printf("Running day %d, part %d with URL '%s'\n", day, part, url)
 	client := &http.Client{}
 
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte(input)))
+	input := util.AocInput{Input: rawInput}
+	jsonData, err := json.Marshal(input)
+	if err != nil {
+		return "", fmt.Errorf("failed to marshal JSON: %v", err)
+	}
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
 	if err != nil {
 		return "", err
 	}
-	req.Header.Set("Content-Type", "text/plain")
+	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := client.Do(req)
 	if err != nil {

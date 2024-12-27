@@ -41,18 +41,30 @@ func CreateGRPCServer(
 	return grpcServer
 }
 
+// This part of the architecture is a bit #YOLO
+// But at least I got to play around a little with gRPC
+// Throughout the entire process I've only used the Kubernetes solution over HTTP
+
 func (s *server) SolvePart1(
 	ctx context.Context,
 	req *InputData,
 ) (*InputResponse, error) {
-	result := s.solvePart1(req.Input)
-	return &InputResponse{Result: result}, nil
+	result, err := s.solvePart1(util.AocInput{Input: req.Input})
+	if s := result.Solution; s != "" {
+		return &InputResponse{Result: s}, nil
+	} else {
+		return &InputResponse{Result: err.Error()}, nil
+	}
 }
 
 func (s *server) SolvePart2(
 	ctx context.Context,
 	req *InputData,
 ) (*InputResponse, error) {
-	result := s.solvePart2(req.Input)
-	return &InputResponse{Result: result}, nil
+	result, err := s.solvePart2(util.AocInput{Input: req.Input})
+	if s := result.Solution; s != "" {
+		return &InputResponse{Result: s}, nil
+	} else {
+		return &InputResponse{Result: err.Error()}, nil
+	}
 }

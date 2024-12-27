@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/terminalnode/adventofcode2024/common"
+	"github.com/terminalnode/adventofcode2024/common/util"
 	"strconv"
 	"strings"
 )
@@ -12,11 +13,11 @@ func main() {
 }
 
 func part1(
-	input string,
-) string {
-	secrets, err := parse(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	secrets, err := parse(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse input: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	sum := 0
@@ -27,7 +28,7 @@ func part1(
 		sum += secret
 	}
 
-	return fmt.Sprintf("Sum of all secret numbers after 2k rounds: %d", sum)
+	return util.FormatAocSolution("Sum of all secret numbers after 2k rounds: %d", sum)
 }
 
 type priceDiff struct {
@@ -36,11 +37,11 @@ type priceDiff struct {
 }
 
 func part2(
-	input string,
-) string {
-	secrets, err := parse(input)
+	input util.AocInput,
+) (util.AocSolution, util.AocError) {
+	secrets, err := parse(input.Input)
 	if err != nil {
-		return fmt.Sprintf("Failed to parse input: %v", err)
+		return util.NewAocError(err.Error(), util.InputParsingError)
 	}
 
 	allKeys := make(map[string]bool)
@@ -88,7 +89,7 @@ func part2(
 		}
 	}
 
-	return fmt.Sprintf("Max number of bananas %d (%s)", bestSum, bestKey)
+	return util.FormatAocSolution("Max number of bananas %d (%s)", bestSum, bestKey)
 }
 
 func priceOf(n int) int {
