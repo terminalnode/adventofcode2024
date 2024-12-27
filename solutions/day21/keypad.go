@@ -7,9 +7,15 @@ import (
 var numStart = util.Coordinate{X: 2, Y: 3}
 var dirStart = util.Coordinate{X: 2, Y: 0}
 
+type cacheMap = map[cacheKey]int
+type cacheKey struct {
+	path  string
+	depth int
+}
+
 // Char to Pos on numeric keypad
 func charToPosNum(
-	c int,
+	c byte,
 ) util.Coordinate {
 	switch c {
 	case '0':
@@ -25,7 +31,7 @@ func charToPosNum(
 
 // Char to Pos on directional keypad
 func charToPosDir(
-	c int,
+	c byte,
 ) util.Coordinate {
 	switch c {
 	case '^':
@@ -44,8 +50,8 @@ func charToPosDir(
 func shortestPath(
 	start, end util.Coordinate,
 	useNumPad bool,
-) []int {
-	var path []int
+) []byte {
+	var path []byte
 	dx := end.X - start.X
 	dy := end.Y - start.Y
 	pVert, pHor := buildPath(dx, dy)
@@ -71,14 +77,40 @@ func shortestPath(
 	return path
 }
 
+func dfs(
+	cache cacheMap,
+	key cacheKey,
+) int {
+	out := 0
+	if v, ok := cache[key]; ok {
+		return v
+	} else if key.depth == 0 {
+		return len(key.path)
+	}
+
+	subPaths := make([][]byte, len(key.path))
+	prev := dirStart
+	for i, c := range key.path {
+		curr := charToPosDir(byte(c))
+		subPaths[i] = shortestPath(prev, curr, false)
+		prev = curr
+	}
+
+	for _, subPath := range subPaths {
+		out += dfs(cache, cacheKey{path: string(subPath), depth: key.depth - 1})
+	}
+	cache[key] = out
+	return out
+}
+
 func buildPath(
 	dx int,
 	dy int,
-) ([]int, []int) {
+) ([]byte, []byte) {
 	adx := util.AbsInt(dx)
 	ady := util.AbsInt(dy)
-	pVert := make([]int, ady)
-	pHor := make([]int, adx)
+	pVert := make([]byte, ady)
+	pHor := make([]byte, adx)
 
 	for i := range adx {
 		if dx < 0 {
