@@ -39,6 +39,23 @@ gateway. If the watch feature of `docker-compose` is enabled, the services will 
 automatically rebuilt and redeployed every time the `common` module or their own
 `solutions/dayX` module is updated.
 
+### Using with gRPC
+I tried also implementing all services using gRPC, and half-succeeded. If running
+the project through `docker-compose` it's possible to call any service using `grpcurl`
+like this:
+```shell
+$ grpcurl -proto common/proto/adventservice.proto \
+  -authority day09.grpc.aoc2024.se \
+  -insecure \
+  -d "$(cat input/day9 | jq -Rs '{input: .}')" \
+  localhost:50051 adventservice.AdventService/SolvePart1
+```
+Just replace `day09.grpc.aoc2024.se` with the correct day, and `SolvePart1` with
+`SolvePart2`. It will not work with the Kubernetes setup however, because the
+ingress controller isn't configured for it. Apparently the Nginx ingress controller
+can't handle both gRPC and HTTP(S) using the same URL, and that was more time
+than I was willing to spend on it. :-)
+
 ## Progress
 * ⭐ means solved
 * 🥸 means solved, but takes 10 seconds or more to run
